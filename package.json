@@ -46,7 +46,7 @@
     "redux-effects-fetch": "^0.3.3",
     "redux-effects-localstorage": "^0.1.7",
     "redux-effects-location": "^0.1.11",
-    "redux-logger": "^1.0.8",
+    "redux-logger": "^1.0.9",
     "redux-multi": "^0.1.8",
     "watchify": "^3.6.1"
   }

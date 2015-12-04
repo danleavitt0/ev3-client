@@ -7,7 +7,8 @@ import {initializeApp} from './actions'
 function mapStateToProps (state) {
   return {
     url: state.url,
-    file: state.file
+    file: state.file,
+    state: state
   }
 }
 

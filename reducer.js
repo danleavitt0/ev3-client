@@ -1,4 +1,4 @@
-import {URL_DID_CHANGE, LOAD_FILE} from './actions'
+import {URL_DID_CHANGE, LOAD_FILE, IS_SAVING, FINISH_SAVING, IS_LOADING} from './actions'
 
 
 function reducer (state, action) {
@@ -11,7 +11,25 @@ function reducer (state, action) {
 		case LOAD_FILE:
 			return {
 				...state,
-				file: action.payload
+				file: action.payload,
+				loading: false
+			}
+		case IS_LOADING:
+			return {
+				...state,
+				loading: true
+			}
+		case IS_SAVING:
+			return {
+				...state,
+				saving: true,
+				saveMessage: ''
+			}
+		case FINISH_SAVING:
+			return {
+				...state,
+				saving: false,
+				saveMessage: action.payload
 			}
 	}
 	return state

@@ -2,6 +2,7 @@ import enroute from 'enroute'
 import Home from './lib/views/home'
 import Editor from './lib/views/editor'
 import NotFound from './lib/views/notFound'
+import Loading from './lib/views/loading'
 import React from 'react'
 
 const router = enroute({
@@ -10,17 +11,24 @@ const router = enroute({
   '*': notFound
 })
 
+const style = {
+	font: {
+		fontFamily: 'Roboto, sans-serif'
+	}
+}
+
 function home (params, props) {
-	return <Home {...props}/>
+	return <Home style={style.font} {...props}/>
 }
 
 function editor (params, props) {
-  console.log('router', props, params)
-	return <Editor title={params.id} file={props.file} {...props}/>
+  if (props.state.loading)
+  	return <Loading />
+	return <Editor style={style.font} title={params.id} file={props.file} message={props.state.saveMessage} {...props}/>
 }
 
 function notFound (params, props) {
-	return <NotFound />
+	return <NotFound style={style.font} />
 }
 
 export default router

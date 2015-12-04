@@ -6,29 +6,23 @@ var app = express()
 app.use(bodyParser.json())
 app.use('/static', express.static(__dirname + '/public'))
 
-app.use(function (req, res, next) {
-  console.log(req.body)
-  next()
-})
-
 app.get('/edit/:name', function (req, res) {
   fs.readFile(__dirname + '/public/' + req.params.name, 'utf-8', function (err, data) {
-    if (err) console.warn(err)
+    if (err)  return res.send('//Add code here')
     res.send(data)
   })
 })
 
 app.post('/save', function (req, res) {
-  console.log(req.body)
-  // fs.writeFile(
-  //   __dirname + '/public/' + req.body.name,
-  //   req.body.text,
-  //   function (err, data) {
-  //     if (err) {
-  //       console.log(err)
-  //     }
-  //     console.log(data)
-  //   })
+  fs.writeFile(
+    __dirname + '/public/' + req.body.name,
+    req.body.text,
+    function (err, data) {
+      if (err) {
+        res.send('Failed to save data, please try again.')
+      }
+      res.send('Save successful')
+    })
 })
 
 app.get('/getFiles', function (req, res) {
