@@ -1,52 +1,35 @@
 import React, {Component} from 'react'
-import brace from 'brace'
-import AceEditor from 'react-ace'
+import router from './router'
+import Home from './lib/views/home'
+import {connect} from 'react-redux'
+import {initializeApp} from './actions'
 
-require('brace/mode/javascript')
-require('brace/theme/github')
-
-class App extends Component {
-  onChange (e) {
-    fetch('http://localhost:3000/save', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        code: e
-      })
-    }).then(response => response.text())
-      .then(responseText => console.log(responseText))
-      .catch(err => console.warn(err))
-  }
-  buttonClick (e) {
-    fetch('http://localhost:3000/run', {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-    }).then(response => response.text())
-      .then(text => eval(text))
-      .catch(err => console.warn(err))
-  }
-  render () {
-    return (
-      <div>
-        <div>
-          Header
-        </div>
-        <button onClick={this.buttonClick}>Run</button>
-        <AceEditor
-          mode='javascript'
-          theme='github'
-          name='editor'
-          onChange={this.onChange}
-        />
-      </div>
-    )
+function mapStateToProps (state) {
+  return {
+    url: state.url,
+    file: state.file
   }
 }
 
-export default App
+function mapDispatchToProps (dispatch) {
+  return {
+    init: () => dispatch(initializeApp())
+  }
+}
+
+class App extends Component {
+  constructor (props) {
+    super(props)
+  }
+  componentWillMount (dispatch) {
+    this.props.init()
+  }
+  render () {
+    return router(this.props.url || '/', this.props)
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App)

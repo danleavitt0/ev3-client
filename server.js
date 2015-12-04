@@ -12,6 +12,13 @@ app.use(function (req, res, next) {
   next()
 })
 
+app.get('/edit/:name', function (req, res) {
+  fs.readFile(__dirname + '/public/' + req.params.name, 'utf-8', function (err, data) {
+    if (err) console.warn(err)
+    res.send(data)
+  })
+})
+
 app.post('/save', function (req, res) {
   fs.writeFile(
     'test.js',
@@ -20,16 +27,16 @@ app.post('/save', function (req, res) {
       if (err) {
         console.log(err)
       }
-  })
+    })
   res.send(req.body)
 })
 
-app.get('/run', function (req, res) {
-  fs.readFile('test.js', 'utf8', function(err, data) {
+app.get('/getFiles', function (req, res) {
+  fs.readdir(__dirname + '/public', function (err, data) {
     if (err) {
       console.warn(err)
     }
-    res.send(data)
+    res.send(JSON.stringify(data))
   })
 })
 
