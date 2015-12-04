@@ -4,7 +4,6 @@ var fs = require('fs')
 var app = express()
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/static', express.static(__dirname + '/public'))
 
 app.use(function (req, res, next) {
@@ -20,15 +19,16 @@ app.get('/edit/:name', function (req, res) {
 })
 
 app.post('/save', function (req, res) {
-  fs.writeFile(
-    'test.js',
-    'function runner () {\n' + req.body.code + '\n}\nmodule.exports = runner()',
-    function (err, data) {
-      if (err) {
-        console.log(err)
-      }
-    })
-  res.send(req.body)
+  console.log(req.body)
+  // fs.writeFile(
+  //   __dirname + '/public/' + req.body.name,
+  //   req.body.text,
+  //   function (err, data) {
+  //     if (err) {
+  //       console.log(err)
+  //     }
+  //     console.log(data)
+  //   })
 })
 
 app.get('/getFiles', function (req, res) {

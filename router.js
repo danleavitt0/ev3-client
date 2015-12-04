@@ -15,7 +15,8 @@ function home (params, props) {
 }
 
 function editor (params, props) {
-	return <Editor title={params.id} file={props.file}/>
+  console.log('router', props, params)
+	return <Editor title={params.id} file={props.file} {...props}/>
 }
 
 function notFound (params, props) {

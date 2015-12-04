@@ -13,7 +13,7 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    init: () => dispatch(initializeApp())
+    dispatch: (fn) => dispatch(fn)
   }
 }
 
@@ -21,8 +21,8 @@ class App extends Component {
   constructor (props) {
     super(props)
   }
-  componentWillMount (dispatch) {
-    this.props.init()
+  componentWillMount () {
+    this.props.dispatch(initializeApp())
   }
   render () {
     return router(this.props.url || '/', this.props)
