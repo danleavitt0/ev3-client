@@ -1,9 +1,8 @@
 var express = require('express')
 var bodyParser = require('body-parser')
 var fs = require('fs')
+var exec = require('child_process').exec
 var app = express()
-
-console.log(process.env)
 
 app.use(bodyParser.json())
 app.use('/static', express.static(__dirname + '/public'))
@@ -28,8 +27,11 @@ app.post('/save', function (req, res) {
 })
 
 app.post('/run', function (req, res) {
-  var file = req.body.file
-
+  var file = __dirname + '/public/' + req.body.fileName
+  exec('node ' + file, ['-o'], function (err, stdout, stderr) {
+    if (err) { console.log(err) }
+    console.log(stdout)
+  })
 })
 
 app.get('/getFiles', function (req, res) {

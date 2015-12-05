@@ -5,3 +5,4 @@ function start () {
 var c = 5 
 var b = 6 
 
+console.log('stuff')

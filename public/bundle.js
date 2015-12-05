@@ -4,7 +4,7 @@
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.setNewUrl = exports.startSave = exports.fetchFile = exports.initializeApp = exports.IS_LOADING = exports.FINISH_SAVING = exports.IS_SAVING = exports.LOAD_FILE = exports.URL_DID_CHANGE = undefined;
+exports.startRun = exports.setNewUrl = exports.startSave = exports.fetchFile = exports.initializeApp = exports.IS_LOADING = exports.FINISH_SAVING = exports.IS_SAVING = exports.LOAD_FILE = exports.URL_DID_CHANGE = undefined;
 
 var _reduxEffectsLocation = require('redux-effects-location');
 
@@ -20,6 +20,19 @@ var IS_LOADING = 'IS_LOADING';
 
 function initializeApp() {
 	return [(0, _reduxEffectsLocation.bindUrl)(urlDidChange)];
+}
+
+function startRun(file) {
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/run', {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			fileName: file
+		})
+	}));
 }
 
 function startSave(title, text) {
@@ -94,6 +107,7 @@ exports.initializeApp = initializeApp;
 exports.fetchFile = fetchFile;
 exports.startSave = startSave;
 exports.setNewUrl = setNewUrl;
+exports.startRun = startRun;
 
 },{"redux-effects":382,"redux-effects-fetch":380,"redux-effects-location":381}],2:[function(require,module,exports){
 'use strict';
@@ -592,7 +606,9 @@ var Editor = (function (_Component) {
 		}
 	}, {
 		key: 'run',
-		value: function run(e) {}
+		value: function run(e) {
+			return this.props.dispatch((0, _actions.startRun)(this.props.title));
+		}
 	}, {
 		key: 'onChange',
 		value: function onChange(code) {

@@ -14,6 +14,19 @@ function initializeApp () {
   ]
 }
 
+function startRun (file) {
+	return bind(fetch('/run', {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			fileName: file
+		})
+	}))
+}
+
 function startSave (title, text) {
 	return [
 		fetchSave(title, text),
@@ -89,5 +102,6 @@ export {
 	initializeApp,
 	fetchFile,
 	startSave,
-	setNewUrl
+	setNewUrl,
+	startRun
 }
