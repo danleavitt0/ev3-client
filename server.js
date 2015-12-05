@@ -3,6 +3,8 @@ var bodyParser = require('body-parser')
 var fs = require('fs')
 var app = express()
 
+console.log(process.env)
+
 app.use(bodyParser.json())
 app.use('/static', express.static(__dirname + '/public'))
 
@@ -23,6 +25,11 @@ app.post('/save', function (req, res) {
       }
       res.send('Save successful')
     })
+})
+
+app.post('/run', function (req, res) {
+  var file = req.body.file
+
 })
 
 app.get('/getFiles', function (req, res) {

@@ -2,7 +2,6 @@ import {bindUrl, setUrl} from 'redux-effects-location'
 import {fetch} from 'redux-effects-fetch'
 import {bind} from 'redux-effects'
 
-const api = 'http://localhost:3000'
 const URL_DID_CHANGE = 'URL_DID_CHANGE'
 const LOAD_FILE = 'LOAD_FILE'
 const IS_SAVING = 'IS_SAVING'
@@ -36,7 +35,7 @@ function finishSave (data) {
 }
 
 function fetchSave (title, text) {
-	return bind(fetch(api + '/save', {
+	return bind(fetch('/save', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -51,7 +50,7 @@ function fetchSave (title, text) {
 
 function fetchFile (url) {
 	return [
-		bind(fetch(api + url), loadFile, (err) => console.warn(err)),
+		bind(fetch(url), loadFile, (err) => console.warn(err)),
 		isLoading()
 	]
 }

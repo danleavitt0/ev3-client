@@ -12,7 +12,6 @@ var _reduxEffectsFetch = require('redux-effects-fetch');
 
 var _reduxEffects = require('redux-effects');
 
-var api = 'http://localhost:3000';
 var URL_DID_CHANGE = 'URL_DID_CHANGE';
 var LOAD_FILE = 'LOAD_FILE';
 var IS_SAVING = 'IS_SAVING';
@@ -41,7 +40,7 @@ function finishSave(data) {
 }
 
 function fetchSave(title, text) {
-	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(api + '/save', {
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/save', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -57,7 +56,7 @@ function fetchSave(title, text) {
 }
 
 function fetchFile(url) {
-	return [(0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(api + url), loadFile, function (err) {
+	return [(0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(url), loadFile, function (err) {
 		return console.warn(err);
 	}), isLoading()];
 }
@@ -719,7 +718,7 @@ var Home = (function (_Component) {
     value: function componentWillMount() {
       var _this2 = this;
 
-      fetch('http://localhost:3000/getFiles', {
+      fetch('/getFiles', {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
