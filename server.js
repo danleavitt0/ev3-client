@@ -30,7 +30,7 @@ app.post('/run', function (req, res) {
   var file = __dirname + '/public/' + req.body.fileName
   exec('node ' + file, ['-o'], function (err, stdout, stderr) {
     if (err) { console.log(err) }
-    console.log(stdout)
+    console.log('running', stdout)
   })
 })
 
