@@ -7,7 +7,7 @@ var app = express()
 app.use(bodyParser.json())
 app.use('/static', express.static(__dirname + '/public'))
 
-app.get('/edit/:name', function (req, res) {
+app.post('/edit/:name', function (req, res) {
   fs.readFile(__dirname + '/public/' + req.params.name, 'utf-8', function (err, data) {
     if (err)  return res.send('//Add code here')
     res.send(data)
@@ -28,13 +28,13 @@ app.post('/save', function (req, res) {
 
 app.post('/run', function (req, res) {
   var file = __dirname + '/public/' + req.body.fileName
-  exec('node ' + file, ['-o'], function (err, stdout, stderr) {
-    if (err) { console.log(err) }
-    console.log('running', stdout)
+  exec('node ' + file, function (err, stdout, stderr) {
+    if (err) { res.json({ok: false}) }
+    res.json({ok: true, message: stdout})
   })
 })
 
-app.get('/getFiles', function (req, res) {
+app.post('/getFiles', function (req, res) {
   fs.readdir(__dirname + '/public', function (err, data) {
     if (err) {
       console.warn(err)

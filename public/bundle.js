@@ -69,7 +69,9 @@ function fetchSave(title, text) {
 }
 
 function fetchFile(url) {
-	return [(0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(url), loadFile, function (err) {
+	return [(0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(url, {
+		method: 'POST'
+	}), loadFile, function (err) {
 		return console.warn(err);
 	}), isLoading()];
 }
@@ -735,7 +737,7 @@ var Home = (function (_Component) {
       var _this2 = this;
 
       fetch('/getFiles', {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
