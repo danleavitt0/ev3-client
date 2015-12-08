@@ -29,7 +29,7 @@ app.post('/save', function (req, res) {
 app.post('/run', function (req, res) {
   var file = __dirname + '/public/' + req.body.fileName
   exec('node ' + file, function (err, stdout, stderr) {
-    if (err) { res.json({ok: false}) }
+    if (err) { console.warn(err) }
     res.json({ok: true, message: stdout})
   })
 })
