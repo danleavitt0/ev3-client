@@ -9,7 +9,7 @@ app.use('/static', express.static(__dirname + '/public'))
 
 app.post('/edit/:name', function (req, res) {
   fs.readFile(__dirname + '/public/' + req.params.name, 'utf-8', function (err, data) {
-    if (err)  return res.send('//Add code here')
+    if (err)  return res.send('var devices = require(\'ev3-js-devices\')')
     res.send(data)
   })
 })
@@ -47,4 +47,5 @@ app.get('/', function (req, res) {
   res.sendfile(__dirname + '/public/index.html')
 })
 
+console.log()
 app.listen(process.env.port || 3000)

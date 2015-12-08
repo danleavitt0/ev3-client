@@ -24,7 +24,7 @@ function startRun (file) {
 		body: JSON.stringify({
 			fileName: file
 		})
-	}))
+	}), (res) => console.log(JSON.stringify(res)))
 }
 
 function startSave (title, text) {
