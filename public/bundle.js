@@ -32,7 +32,9 @@ function startRun(file) {
 		body: JSON.stringify({
 			fileName: file
 		})
-	}));
+	}), function (res) {
+		return console.log(JSON.stringify(res));
+	});
 }
 
 function startSave(title, text) {
