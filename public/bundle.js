@@ -32,7 +32,9 @@ function startRun(file) {
 		body: JSON.stringify({
 			fileName: file
 		})
-	}));
+	}), function (res) {
+		return console.log(JSON.stringify(res));
+	});
 }
 
 function startSave(title, text) {
@@ -69,7 +71,9 @@ function fetchSave(title, text) {
 }
 
 function fetchFile(url) {
-	return [(0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(url), loadFile, function (err) {
+	return [(0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(url, {
+		method: 'POST'
+	}), loadFile, function (err) {
 		return console.warn(err);
 	}), isLoading()];
 }
@@ -735,7 +739,7 @@ var Home = (function (_Component) {
       var _this2 = this;
 
       fetch('/getFiles', {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -919,7 +923,6 @@ exports.default = function (_ref) {
 
   return function (next) {
     return function (action) {
-      console.log('fetch middleware');
       if (action.type === 'URL_DID_CHANGE' && action.payload.split('/')[1] === 'edit') {
         dispatch((0, _actions.fetchFile)(action.payload));
       }
