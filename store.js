@@ -10,12 +10,12 @@ import getFile from './middleware/getFile'
 
 const middlewares = [
 	multi,
-  	effects,
-  	fetch,
-  	events(),
-  	location(),
-  	getFile,
-  	logger()
+  effects,
+  fetch,
+  events(),
+  location(),
+  getFile,
+  logger()
 ]
 
 export default initialState => applyMiddleware(...middlewares)(createStore)(reducer, initialState)

@@ -64,8 +64,8 @@ function fetchSave (title, text) {
 function fetchFile (url) {
 	return [
 		bind(fetch(url, {
-			method: 'POST'
-		}), loadFile, (err) => console.warn(err)),
+     		method: 'POST'
+    	}), loadFile, (err) => console.warn(err)),
 		isLoading()
 	]
 }
