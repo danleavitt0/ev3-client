@@ -21,7 +21,7 @@
     "body-parser": "^1.14.1",
     "brace": "^0.5.1",
     "enroute": "^1.0.1",
-    "ev3-js-devices": "^0.4.1",
+    "ev3-js-devices": "^0.4.2",
     "express": "^4.13.3",
     "fs": "0.0.2",
     "react": "^0.14.3",
