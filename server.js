@@ -3,6 +3,7 @@
 var express = require('express')
 var bodyParser = require('body-parser')
 var fs = require('fs')
+var ip = require('ip')
 var exec = require('child_process').exec
 var app = express()
 
@@ -49,5 +50,6 @@ app.get('/', function (req, res) {
   res.sendfile(__dirname + '/public/index.html')
 })
 
-console.log()
-app.listen(process.env.port || 3000)
+var port = process.env.port || 3000
+console.log('In your browser, navigate to ' + ip.address() + ':' + port)
+app.listen(port)
