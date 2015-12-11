@@ -923,7 +923,6 @@ exports.default = function (_ref) {
 
   return function (next) {
     return function (action) {
-      console.log('fetch middleware');
       if (action.type === 'URL_DID_CHANGE' && action.payload.split('/')[1] === 'edit') {
         dispatch((0, _actions.fetchFile)(action.payload));
       }
