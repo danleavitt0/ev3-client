@@ -12,7 +12,7 @@ app.use('/static', express.static(__dirname + '/public'))
 
 app.post('/edit/:name', function (req, res) {
   fs.readFile(__dirname + '/files/' + req.params.name, 'utf-8', function (err, data) {
-    if (err)  return res.send('var devices = require(\'ev3-js-devices\')')
+    if (err)  return res.send('var MoveSteering = require(\'move-steering\')')
     res.send(data)
   })
 })
