@@ -8,7 +8,7 @@ app.use(bodyParser.json())
 app.use('/static', express.static(__dirname + '/public'))
 
 app.post('/edit/:name', function (req, res) {
-  fs.readFile(__dirname + '/public/' + req.params.name, 'utf-8', function (err, data) {
+  fs.readFile(__dirname + '/files/' + req.params.name, 'utf-8', function (err, data) {
     if (err)  return res.send('var devices = require(\'ev3-js-devices\')')
     res.send(data)
   })
@@ -16,7 +16,7 @@ app.post('/edit/:name', function (req, res) {
 
 app.post('/save', function (req, res) {
   fs.writeFile(
-    __dirname + '/public/' + req.body.name,
+    __dirname + '/files/' + req.body.name,
     req.body.text,
     function (err, data) {
       if (err) {
@@ -27,7 +27,7 @@ app.post('/save', function (req, res) {
 })
 
 app.post('/run', function (req, res) {
-  var file = __dirname + '/public/' + req.body.fileName
+  var file = __dirname + '/files/' + req.body.fileName
   exec('node ' + file, function (err, stdout, stderr) {
     if (err) { console.warn(err) }
     res.json({ok: true, message: stdout})
@@ -35,7 +35,7 @@ app.post('/run', function (req, res) {
 })
 
 app.post('/getFiles', function (req, res) {
-  fs.readdir(__dirname + '/public', function (err, data) {
+  fs.readdir(__dirname + '/files', function (err, data) {
     if (err) {
       console.warn(err)
     }
