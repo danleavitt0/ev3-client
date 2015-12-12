@@ -4,7 +4,7 @@ var express = require('express')
 var bodyParser = require('body-parser')
 var fs = require('fs')
 var ip = require('ip')
-var exec = require('child_process').exec
+var spawn = require('child_process').spawn
 var app = express()
 
 app.use(bodyParser.json())
@@ -31,10 +31,7 @@ app.post('/save', function (req, res) {
 
 app.post('/run', function (req, res) {
   var file = __dirname + '/files/' + req.body.fileName
-  exec('node ' + file, function (err, stdout, stderr) {
-    if (err) { console.warn(err) }
-    res.json({ok: true, message: stdout})
-  })
+  node.stdin.write(file)
 })
 
 app.post('/getFiles', function (req, res) {
@@ -48,6 +45,15 @@ app.post('/getFiles', function (req, res) {
 
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/public/index.html')
+})
+
+var node = spawn('node', ['run.js'])
+node.stdout.setEncoding('utf-8')
+node.stdout.on('data', function (data) {
+  console.log('output:', data)
+})
+node.stderr.on('data', function (data) {
+  console.log('There was an error: ' + data)
 })
 
 var port = process.env.port || 3000

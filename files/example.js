@@ -1,1 +1,2 @@
-var MoveSteering = require('move-steering')
+var a = 5
+console.log(a)
