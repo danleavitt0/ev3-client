@@ -23,15 +23,16 @@ app.post('/save', function (req, res) {
     req.body.text,
     function (err, data) {
       if (err) {
-        res.send('Failed to save data, please try again.')
+        res.json({ok: false, message: 'Failed to save data, please try again.'})
       }
-      res.send('Save successful')
+      res.json({ok: true})
     })
 })
 
 app.post('/run', function (req, res) {
   var file = __dirname + '/files/' + req.body.fileName
   node.stdin.write(file)
+  res.json({ok: true})
 })
 
 app.post('/getFiles', function (req, res) {
