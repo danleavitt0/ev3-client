@@ -43,8 +43,11 @@ function MoveSteering (leftPort, rightPort) {
  */
 
 MoveSteering.prototype.forever = function (speed, turn, opts) {
-  this.left.forever(speed, defaults(opts, motorDefaults))
-  this.right.forever(speed, defaults(opts, motorDefaults))
+  speed = speed || motorDefaults.speed
+  var speeds = turnToSpeeds(turn, speed)
+
+  this.left.forever(speeds.left, defaults(opts, motorDefaults))
+  this.right.forever(speeds.right, defaults(opts, motorDefaults))
 }
 
 /**
