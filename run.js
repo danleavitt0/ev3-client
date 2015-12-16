@@ -6,6 +6,6 @@ process.stdin.on('data', function (data) {
 	try {
 		eval(string)
 	} catch (e) {
-		process.stdout.write(e)
+		console.log(e)
 	}
 })
