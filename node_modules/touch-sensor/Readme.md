@@ -41,5 +41,5 @@ MIT
 
 [standard-image]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat
 [standard-url]: https://github.com/feross/standard
-[npm-image]: https://img.shields.io/npm/v/ev3-js-touch-sensor.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/ev3-js-touch-sensor
+[npm-image]: https://img.shields.io/npm/v/touch-sensor.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/touch-sensor
