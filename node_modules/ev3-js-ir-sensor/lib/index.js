@@ -33,18 +33,18 @@ Object.defineProperties(IRSensor.prototype, {
 
 function getProximity () {
   this.write('mode', 'IR-PROX')
-  return this.read('value0')
+  return Number(this.read('value0'))
 }
 
 IRSensor.prototype.beacon = function (channel) {
   this.write('mode', 'IR-SEEK')
   return {
-    heading: this.read('value' + (channel * 2 - 2)),
-    distance: this.read('value' + (channel * 2 - 1))
+    heading: Number(this.read('value' + (channel * 2 - 2))),
+    distance: Number(this.read('value' + (channel * 2 - 1)))
   }
 }
 
 IRSensor.prototype.remote = function (channel) {
   this.write('mode', 'IR-REMOTE')
-  return this.read('value' + (channel - 1))
+  return Number(this.read('value' + (channel - 1)))
 }

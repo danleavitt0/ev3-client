@@ -37,5 +37,5 @@ Object.defineProperties(TouchSensor.prototype, {
  */
 function getValue () {
   this.write('mode', 'TOUCH')
-  return this.read('value0')
+  return Number(this.read('value0'))
 }

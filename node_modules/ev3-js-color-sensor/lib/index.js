@@ -40,7 +40,7 @@ Object.defineProperties(ColorSensor.prototype, {
  */
 function getColor () {
   this.write('mode', 'COL-COLOR')
-  return this.read('value0')
+  return Number(this.read('value0'))
 }
 
 /**
@@ -49,5 +49,5 @@ function getColor () {
  */
 function getReflected () {
   this.write('mode', 'COL-REFLECT')
-  return this.read('value0')
+  return Number(this.read('value0'))
 }

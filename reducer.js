@@ -29,7 +29,7 @@ function reducer (state, action) {
 			return {
 				...state,
 				saving: false,
-				saveMessage: action.payload
+				saveMessage: action.payload.message
 			}
 	}
 	return state
