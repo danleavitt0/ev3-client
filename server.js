@@ -25,7 +25,7 @@ app.post('/save', function (req, res) {
       if (err) {
         res.json({ok: false, message: 'Failed to save data, please try again.'})
       }
-      res.json({ok: true})
+      res.json({ok: true, message: 'Save Successful'})
     })
 })
 

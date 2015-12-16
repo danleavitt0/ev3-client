@@ -583,7 +583,7 @@ var Editor = (function (_Component) {
 			text: props.file,
 			saving: false,
 			dirty: false,
-			message: ''
+			message: props.message
 		};
 		return _this;
 	}
@@ -624,6 +624,7 @@ var Editor = (function (_Component) {
 	}, {
 		key: 'render',
 		value: function render() {
+			console.log(this.state);
 			return _react2.default.createElement(
 				_main2.default,
 				{ nav: _react2.default.createElement(_nav2.default, { title: this.props.title, iconLeft: _react2.default.createElement(_button2.default, null) }) },
@@ -653,7 +654,10 @@ var Editor = (function (_Component) {
 						secondary: true,
 						label: 'Run' })
 				),
-				_react2.default.createElement(_lib.Snackbar, { style: styles.font, ref: 'message', message: this.state.message })
+				_react2.default.createElement(_lib.Snackbar, {
+					style: styles.font,
+					ref: 'message',
+					message: this.state.message })
 			);
 		}
 	}]);
@@ -79974,7 +79978,7 @@ function reducer(state, action) {
 		case _actions.FINISH_SAVING:
 			return _extends({}, state, {
 				saving: false,
-				saveMessage: action.payload
+				saveMessage: action.payload.message
 			});
 	}
 	return state;
@@ -79988,7 +79992,7 @@ exports.default = reducer;
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
 
 var _enroute = require('enroute');
@@ -80018,28 +80022,30 @@ var _react2 = _interopRequireDefault(_react);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var router = (0, _enroute2.default)({
-	'/': home,
-	'/edit/:id': editor,
-	'*': notFound
+  '/': home,
+  '/edit/:id': editor,
+  '*': notFound
 });
 
 var style = {
-	font: {
-		fontFamily: 'Roboto, sans-serif'
-	}
+  font: {
+    fontFamily: 'Roboto, sans-serif'
+  }
 };
 
 function home(params, props) {
-	return _react2.default.createElement(_home2.default, _extends({ style: style.font }, props));
+  return _react2.default.createElement(_home2.default, _extends({ style: style.font }, props));
 }
 
 function editor(params, props) {
-	if (props.state.loading) return _react2.default.createElement(_loading2.default, null);
-	return _react2.default.createElement(_editor2.default, _extends({ style: style.font, title: params.id, file: props.file, message: props.state.saveMessage }, props));
+  if (props.state.loading) {
+    return _react2.default.createElement(_loading2.default, null);
+  }
+  return _react2.default.createElement(_editor2.default, _extends({ style: style.font, title: params.id, file: props.file, message: props.state.saveMessage }, props));
 }
 
 function notFound(params, props) {
-	return _react2.default.createElement(_notFound2.default, { style: style.font });
+  return _react2.default.createElement(_notFound2.default, { style: style.font });
 }
 
 exports.default = router;

@@ -22,8 +22,9 @@ function home (params, props) {
 }
 
 function editor (params, props) {
-  if (props.state.loading)
+  if (props.state.loading) {
   	return <Loading />
+  }
 	return <Editor style={style.font} title={params.id} file={props.file} message={props.state.saveMessage} {...props}/>
 }
 
