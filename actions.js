@@ -5,8 +5,9 @@ import {bind} from 'redux-effects'
 const URL_DID_CHANGE = 'URL_DID_CHANGE'
 const LOAD_FILE = 'LOAD_FILE'
 const IS_SAVING = 'IS_SAVING'
-const FINISH_SAVING = 'FINISH_SAVING'
+const FINISH_SERVER = 'FINISH_SERVER'
 const IS_LOADING = 'IS_LOADING'
+const IS_RUNNING = 'IS_RUNNING'
 
 function initializeApp () {
   return [
@@ -15,16 +16,25 @@ function initializeApp () {
 }
 
 function startRun (file) {
-	return bind(fetch('/run', {
-		method: 'POST',
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			fileName: file
-		})
-	}), (res) => console.log(JSON.stringify(res)))
+	return [
+		bind(fetch('/file.run', {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				fileName: file
+			})
+		}), (res) => console.log(JSON.stringify(res))),
+		startRunning()
+	]
+}
+
+function startRunning () {
+	return {
+		type: IS_RUNNING
+	}
 }
 
 function startSave (title, text) {
@@ -40,15 +50,15 @@ function isSaving () {
 	}
 }
 
-function finishSave (data) {
+function finishServer (data) {
 	return {
-		type: FINISH_SAVING,
+		type: FINISH_SERVER,
 		payload: data
 	}
 }
 
 function fetchSave (title, text) {
-	return bind(fetch('/save', {
+	return bind(fetch('/file.save', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -58,7 +68,7 @@ function fetchSave (title, text) {
 			name: title,
 			text: text
 		})
-	}), finishSave, (err) => console.warn(err))
+	}), finishServer, (err) => console.warn(err))
 }
 
 function fetchFile (url) {
@@ -94,16 +104,24 @@ function urlDidChange (url) {
   }
 }
 
+function stop () {
+	return bind(fetch('/file.stop', {
+		method: 'POST',
+	}), finishServer, (err) => console.warn(err))
+}
+
 export {
 	URL_DID_CHANGE,
 	LOAD_FILE,
 	IS_SAVING,
-	FINISH_SAVING,
+	FINISH_SERVER,
 	IS_LOADING,
+	IS_RUNNING,
 
 	initializeApp,
 	fetchFile,
 	startSave,
 	setNewUrl,
-	startRun
+	startRun,
+	stop
 }

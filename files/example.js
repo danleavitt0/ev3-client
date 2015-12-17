@@ -1,2 +1,5 @@
-var a = 5
-console.log(a)
+console.log('start')
+setTimeout(function () {
+  console.log('end')
+}, 10000)
+var c= 5 

@@ -4,7 +4,7 @@
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.startRun = exports.setNewUrl = exports.startSave = exports.fetchFile = exports.initializeApp = exports.IS_LOADING = exports.FINISH_SAVING = exports.IS_SAVING = exports.LOAD_FILE = exports.URL_DID_CHANGE = undefined;
+exports.stop = exports.startRun = exports.setNewUrl = exports.startSave = exports.fetchFile = exports.initializeApp = exports.IS_RUNNING = exports.IS_LOADING = exports.FINISH_SERVER = exports.IS_SAVING = exports.LOAD_FILE = exports.URL_DID_CHANGE = undefined;
 
 var _reduxEffectsLocation = require('redux-effects-location');
 
@@ -15,15 +15,16 @@ var _reduxEffects = require('redux-effects');
 var URL_DID_CHANGE = 'URL_DID_CHANGE';
 var LOAD_FILE = 'LOAD_FILE';
 var IS_SAVING = 'IS_SAVING';
-var FINISH_SAVING = 'FINISH_SAVING';
+var FINISH_SERVER = 'FINISH_SERVER';
 var IS_LOADING = 'IS_LOADING';
+var IS_RUNNING = 'IS_RUNNING';
 
 function initializeApp() {
 	return [(0, _reduxEffectsLocation.bindUrl)(urlDidChange)];
 }
 
 function startRun(file) {
-	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/run', {
+	return [(0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/file.run', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -34,7 +35,13 @@ function startRun(file) {
 		})
 	}), function (res) {
 		return console.log(JSON.stringify(res));
-	});
+	}), startRunning()];
+}
+
+function startRunning() {
+	return {
+		type: IS_RUNNING
+	};
 }
 
 function startSave(title, text) {
@@ -47,15 +54,15 @@ function isSaving() {
 	};
 }
 
-function finishSave(data) {
+function finishServer(data) {
 	return {
-		type: FINISH_SAVING,
+		type: FINISH_SERVER,
 		payload: data
 	};
 }
 
 function fetchSave(title, text) {
-	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/save', {
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/file.save', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -65,7 +72,7 @@ function fetchSave(title, text) {
 			name: title,
 			text: text
 		})
-	}), finishSave, function (err) {
+	}), finishServer, function (err) {
 		return console.warn(err);
 	});
 }
@@ -102,16 +109,26 @@ function urlDidChange(url) {
 	};
 }
 
+function stop() {
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/file.stop', {
+		method: 'POST'
+	}), finishServer, function (err) {
+		return console.warn(err);
+	});
+}
+
 exports.URL_DID_CHANGE = URL_DID_CHANGE;
 exports.LOAD_FILE = LOAD_FILE;
 exports.IS_SAVING = IS_SAVING;
-exports.FINISH_SAVING = FINISH_SAVING;
+exports.FINISH_SERVER = FINISH_SERVER;
 exports.IS_LOADING = IS_LOADING;
+exports.IS_RUNNING = IS_RUNNING;
 exports.initializeApp = initializeApp;
 exports.fetchFile = fetchFile;
 exports.startSave = startSave;
 exports.setNewUrl = setNewUrl;
 exports.startRun = startRun;
+exports.stop = stop;
 
 },{"redux-effects":385,"redux-effects-fetch":379,"redux-effects-location":382}],2:[function(require,module,exports){
 'use strict';
@@ -389,27 +406,10 @@ var Project = (function (_Component) {
 	function Project(props) {
 		_classCallCheck(this, Project);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Project).call(this, props));
-
-		_this.state = { hover: false };
-		return _this;
+		return _possibleConstructorReturn(this, Object.getPrototypeOf(Project).call(this, props));
 	}
 
 	_createClass(Project, [{
-		key: 'mouseOver',
-		value: function mouseOver() {
-			this.setState({
-				hover: true
-			});
-		}
-	}, {
-		key: 'mouseOut',
-		value: function mouseOut() {
-			this.setState({
-				hover: false
-			});
-		}
-	}, {
 		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
@@ -583,6 +583,7 @@ var Editor = (function (_Component) {
 			text: props.file,
 			saving: false,
 			dirty: false,
+			running: false,
 			message: props.message
 		};
 		return _this;
@@ -596,6 +597,7 @@ var Editor = (function (_Component) {
 			}
 			return this.setState({
 				saving: nextProps.state.saving,
+				running: nextProps.state.running,
 				message: nextProps.message
 			});
 		}
@@ -603,7 +605,6 @@ var Editor = (function (_Component) {
 		key: 'save',
 		value: function save(e) {
 			this.props.dispatch((0, _actions.startSave)(this.props.title, this.state.text));
-
 			return this.setState({
 				dirty: false
 			});
@@ -612,6 +613,11 @@ var Editor = (function (_Component) {
 		key: 'run',
 		value: function run(e) {
 			return this.props.dispatch((0, _actions.startRun)(this.props.title));
+		}
+	}, {
+		key: 'stop',
+		value: function stop() {
+			return this.props.dispatch((0, _actions.stop)());
 		}
 	}, {
 		key: 'onChange',
@@ -624,7 +630,7 @@ var Editor = (function (_Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			console.log(this.state);
+			console.log(this.state.running);
 			return _react2.default.createElement(
 				_main2.default,
 				{ nav: _react2.default.createElement(_nav2.default, { title: this.props.title, iconLeft: _react2.default.createElement(_button2.default, null) }) },
@@ -637,7 +643,8 @@ var Editor = (function (_Component) {
 					value: this.state.text,
 					height: '100vh',
 					width: '100vw',
-					ref: 'editor'
+					ref: 'editor',
+					tabSize: 2
 				}),
 				_react2.default.createElement(
 					'div',
@@ -652,7 +659,13 @@ var Editor = (function (_Component) {
 						onClick: this.run.bind(this),
 						style: styles.button,
 						secondary: true,
-						label: 'Run' })
+						label: 'Run',
+						disabled: this.state.running }),
+					_react2.default.createElement(_lib.RaisedButton, {
+						onClick: this.stop.bind(this),
+						style: styles.button,
+						label: 'Stop',
+						disabled: !this.state.running })
 				),
 				_react2.default.createElement(_lib.Snackbar, {
 					style: styles.font,
@@ -742,7 +755,7 @@ var Home = (function (_Component) {
     value: function componentWillMount() {
       var _this2 = this;
 
-      fetch('/getFiles', {
+      fetch('/file.getAll', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -928,7 +941,7 @@ exports.default = function (_ref) {
   return function (next) {
     return function (action) {
       if (action.type === 'URL_DID_CHANGE' && action.payload.split('/')[1] === 'edit') {
-        dispatch((0, _actions.fetchFile)(action.payload));
+        dispatch((0, _actions.fetchFile)('/file.edit/' + action.payload.split('/')[2]));
       }
       return next(action);
     };
@@ -79975,9 +79988,16 @@ function reducer(state, action) {
 				saving: true,
 				saveMessage: ''
 			});
-		case _actions.FINISH_SAVING:
+		case _actions.IS_RUNNING:
+			console.log('is_running');
+			return _extends({}, state, {
+				running: true,
+				saveMessage: ''
+			});
+		case _actions.FINISH_SERVER:
 			return _extends({}, state, {
 				saving: false,
+				running: false,
 				saveMessage: action.payload.message
 			});
 	}

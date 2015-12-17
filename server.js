@@ -6,18 +6,20 @@ var fs = require('fs')
 var ip = require('ip')
 var spawn = require('child_process').spawn
 var app = express()
+var node
 
 app.use(bodyParser.json())
 app.use('/static', express.static(__dirname + '/public'))
 
-app.post('/edit/:name', function (req, res) {
+app.post('/file.edit/:name', function (req, res) {
   fs.readFile(__dirname + '/files/' + req.params.name, 'utf-8', function (err, data) {
     if (err)  return res.send('var MoveSteering = require(\'move-steering\')')
     res.send(data)
   })
 })
 
-app.post('/save', function (req, res) {
+app.post('/file.save', function (req, res) {
+  console.log('file save')
   fs.writeFile(
     __dirname + '/files/' + req.body.name,
     req.body.text,
@@ -29,13 +31,22 @@ app.post('/save', function (req, res) {
     })
 })
 
-app.post('/run', function (req, res) {
+app.post('/file.stop', function (req, res) {
+  node.kill('SIGINT')
+  node = createNode()
+  res.json({
+    ok: true,
+    message: 'Run stopped'
+  })
+})
+
+app.post('/file.run', function (req, res) {
   var file = __dirname + '/files/' + req.body.fileName
   node.stdin.write(file)
   res.json({ok: true})
 })
 
-app.post('/getFiles', function (req, res) {
+app.post('/file.getAll', function (req, res) {
   fs.readdir(__dirname + '/files', function (err, data) {
     if (err) {
       console.warn(err)
@@ -48,14 +59,19 @@ app.get('/', function (req, res) {
   res.sendfile(__dirname + '/public/index.html')
 })
 
-var node = spawn('node', ['run.js'])
-node.stdout.setEncoding('utf-8')
-node.stdout.on('data', function (data) {
-  console.log('output:', data)
-})
-node.stderr.on('data', function (data) {
-  console.log('There was an error: ' + data)
-})
+node = createNode()
+
+function createNode () {
+  var n = spawn('node', ['run.js'])
+  n.stdout.setEncoding('utf-8')
+  n.stdout.on('data', function (data) {
+    console.log('output:', data)
+  })
+  n.stderr.on('data', function (data) {
+    console.log('There was an error: ' + data)
+  })
+  return n
+}
 
 var port = process.env.port || 3000
 console.log('In your browser, navigate to ' + ip.address() + ':' + port)

@@ -1,4 +1,4 @@
-import {URL_DID_CHANGE, LOAD_FILE, IS_SAVING, FINISH_SAVING, IS_LOADING} from './actions'
+import {URL_DID_CHANGE, LOAD_FILE, IS_SAVING, FINISH_SERVER, IS_LOADING, IS_RUNNING} from './actions'
 
 
 function reducer (state, action) {
@@ -25,10 +25,18 @@ function reducer (state, action) {
 				saving: true,
 				saveMessage: ''
 			}
-		case FINISH_SAVING:
+		case IS_RUNNING:
+			console.log('is_running')
+			return {
+				...state,
+				running: true,
+				saveMessage: ''
+			}
+		case FINISH_SERVER:
 			return {
 				...state,
 				saving: false,
+				running: false,
 				saveMessage: action.payload.message
 			}
 	}
