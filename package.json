@@ -35,7 +35,8 @@
     "react": "^0.14.3",
     "react-ace": "^2.6.0",
     "react-ace-wrapper": "^1.0.1",
-    "touch-sensor": "^0.1.7"
+    "touch-sensor": "^0.1.7",
+    "ultrasonic-sensor": "^0.1.4"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.1.18",
