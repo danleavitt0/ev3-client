@@ -26,7 +26,6 @@ function reducer (state, action) {
 				saveMessage: ''
 			}
 		case IS_RUNNING:
-			console.log('is_running')
 			return {
 				...state,
 				running: true,

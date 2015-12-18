@@ -6,7 +6,8 @@ var fs = require('fs')
 var ip = require('ip')
 var spawn = require('child_process').spawn
 var app = express()
-var node
+var MoveSteering = require('move-steering')
+var node = createNode()
 
 app.use(bodyParser.json())
 app.use('/static', express.static(__dirname + '/public'))
@@ -19,7 +20,6 @@ app.post('/file.edit/:name', function (req, res) {
 })
 
 app.post('/file.save', function (req, res) {
-  console.log('file save')
   fs.writeFile(
     __dirname + '/files/' + req.body.name,
     req.body.text,
@@ -33,6 +33,7 @@ app.post('/file.save', function (req, res) {
 
 app.post('/file.stop', function (req, res) {
   node.kill('SIGINT')
+  MoveSteering().stop()
   node = createNode()
   res.json({
     ok: true,
@@ -55,11 +56,9 @@ app.post('/file.getAll', function (req, res) {
   })
 })
 
-app.get('/', function (req, res) {
+app.get('*', function (req, res) {
   res.sendfile(__dirname + '/public/index.html')
 })
-
-node = createNode()
 
 function createNode () {
   var n = spawn('node', ['run.js'])
