@@ -4,11 +4,14 @@ var express = require('express')
 var bodyParser = require('body-parser')
 var fs = require('fs')
 var ip = require('ip')
+var cors = require('cors')
+var livereload = require('express-livereload')
 var spawn = require('child_process').spawn
 var app = express()
 var MoveSteering = require('move-steering')
 var node = createNode()
 
+app.use(cors())
 app.use(bodyParser.json())
 app.use('/static', express.static(__dirname + '/public'))
 
@@ -73,5 +76,6 @@ function createNode () {
 }
 
 var port = process.env.port || 3000
+livereload(app, config={watchDir: process.cwd() + "/public"})
 console.log('In your browser, navigate to ' + ip.address() + ':' + port)
 app.listen(port)
