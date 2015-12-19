@@ -581,6 +581,7 @@ var Sensor = (function (_Component) {
 	_createClass(Sensor, [{
 		key: 'render',
 		value: function render() {
+			console.log(this.props);
 			var widget = component(this.props.type || '*');
 			return _react2.default.createElement(
 				'div',
@@ -677,7 +678,7 @@ var SensorReadOut = (function (_Component) {
 
 			var widgets = [];
 			for (var key in sensors) {
-				widgets.push(_react2.default.createElement(_sensor2.default, { key: key, port: key }));
+				widgets.push(_react2.default.createElement(_sensor2.default, { key: key, port: key, type: sensors[key].type }));
 			}
 			return _react2.default.createElement(
 				'div',

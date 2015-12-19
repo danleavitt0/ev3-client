@@ -71,7 +71,9 @@ app.post('/sensors.data', function (req,res) {
         type: fs.readFileSync(path + '/driver_name', 'utf-8').trim()
       }
     } catch (e) {
-      obj[port] = 'No device connected'
+      obj[port] = {
+        type: 'No device connected'
+      }
     }
     return obj
   }, {})
