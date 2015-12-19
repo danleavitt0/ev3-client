@@ -63,12 +63,12 @@ app.post('/file.getAll', function (req, res) {
 })
 
 app.post('/sensors.data', function (req,res) {
-  var currentDevices = ports.reduce((obj, port) => {
+  var currentDevices = ports.reduce(function (obj, port) {
     try {
       var path = devices(port)
       obj[port] = {
         path: path,
-        type: fs.readFileSync(path + '/driver_name')
+        type: fs.readFileSync(path + '/driver_name', 'utf-8').trim()
       }
     } catch (e) {
       obj[port] = 'No device connected'
@@ -77,7 +77,7 @@ app.post('/sensors.data', function (req,res) {
   }, {})
   res.json({
     ok: true,
-    currentDevices
+    currentDevices: currentDevices
   })
 })
 
