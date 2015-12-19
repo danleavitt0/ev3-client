@@ -9,7 +9,10 @@ var livereload = require('express-livereload')
 var spawn = require('child_process').spawn
 var app = express()
 var MoveSteering = require('move-steering')
+var devices = require('ev3-js-devices')
 var node = createNode()
+
+var ports = ['a', 'b', 'c', 'd', 1, 2, 3, 4]
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -56,6 +59,25 @@ app.post('/file.getAll', function (req, res) {
       console.warn(err)
     }
     res.send(JSON.stringify(data))
+  })
+})
+
+app.post('/sensors.data', function (req,res) {
+  var currentDevices = ports.reduce((obj, port) => {
+    try {
+      var path = devices(port)
+      obj[port] = {
+        path: path,
+        type: fs.readFileSync(path + '/driver_name')
+      }
+    } catch (e) {
+      obj[port] = 'No device connected'
+    }
+    return obj
+  }, {})
+  res.json({
+    ok: true,
+    currentDevices
   })
 })
 

@@ -2,13 +2,15 @@ import React, {Component} from 'react'
 import router from './router'
 import Home from './lib/views/home'
 import {connect} from 'react-redux'
-import {initializeApp} from './actions'
+import {initializeApp} from './actions/initialize'
 
 function mapStateToProps (state) {
+  const {serverReducer, sensorReducer} = state
   return {
-    url: state.url,
-    file: state.file,
-    state: state
+    url: serverReducer.url,
+    file: serverReducer.file,
+    sensors: sensorReducer,
+    state: serverReducer
   }
 }
 

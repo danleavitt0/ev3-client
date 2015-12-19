@@ -2,19 +2,12 @@ import {bindUrl, setUrl} from 'redux-effects-location'
 import {fetch} from 'redux-effects-fetch'
 import {bind} from 'redux-effects'
 
-const URL_DID_CHANGE = 'URL_DID_CHANGE'
 const LOAD_FILE = 'LOAD_FILE'
 const IS_SAVING = 'IS_SAVING'
 const FINISH_SERVER = 'FINISH_SERVER'
 const IS_LOADING = 'IS_LOADING'
 const IS_RUNNING = 'IS_RUNNING'
 const DEV_SERVER = 'http://localhost:3000'
-
-function initializeApp () {
-  return [
-    bindUrl(urlDidChange)
-  ]
-}
 
 function startRun (file) {
 	return [
@@ -105,22 +98,13 @@ function setNewUrl (url) {
 	return setUrl(url)
 }
 
-function urlDidChange (url) {
-  return {
-    type: URL_DID_CHANGE,
-    payload: url
-  }
-}
-
 export {
-	URL_DID_CHANGE,
 	LOAD_FILE,
 	IS_SAVING,
 	FINISH_SERVER,
 	IS_LOADING,
 	IS_RUNNING,
 
-	initializeApp,
 	fetchFile,
 	startSave,
 	setNewUrl,

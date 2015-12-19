@@ -25,7 +25,13 @@ function editor (params, props) {
   if (props.state.loading) {
   	return <Loading />
   }
-	return <Editor style={style.font} title={params.id} file={props.file} message={props.state.saveMessage} {...props}/>
+	return <Editor
+    style={style.font}
+    title={params.id}
+    file={props.file}
+    message={props.state.saveMessage}
+    sensors={props.sensors}
+    {...props}/>
 }
 
 function notFound (params, props) {

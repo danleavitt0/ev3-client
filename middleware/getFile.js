@@ -1,4 +1,4 @@
-import {fetchFile} from '../actions'
+import {fetchFile} from '../actions/actions'
 
 export default function ({dispatch, getState}) {
 	return next => action => {

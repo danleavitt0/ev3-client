@@ -8,12 +8,14 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
 
 const store = createStore({
-	url: '/'
+	serverReducer: {
+		url: '/'
+	}
 })
 
 ReactDOM.render(
 	<Provider store={store}>
 		<App />
-	</Provider>, 
+	</Provider>,
 	document.body
 )
