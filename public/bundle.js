@@ -1449,7 +1449,7 @@ var ColorSensor = (function (_Component) {
 
 			this.interval = setInterval(function () {
 				return _this2.props.dispatch((0, _sensors.getSensorData)(_this2.props.path));
-			});
+			}, 1000);
 		}
 	}, {
 		key: 'componentWillUnmount',
