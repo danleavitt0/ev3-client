@@ -1460,7 +1460,6 @@ var ColorSensor = (function (_Component) {
 		key: 'render',
 		value: function render() {
 			var color = this.colorValue();
-			console.log(color);
 			return _react2.default.createElement(
 				'div',
 				{ style: styles.container },
