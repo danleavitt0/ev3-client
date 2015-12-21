@@ -1,12 +1,46 @@
 import {fetch} from 'redux-effects-fetch'
 import {bind} from 'redux-effects'
 
-const SENSOR_DATA = 'SENSOR_DATA'
+const DEVICE_DATA = 'DEVICE_DATA'
+const INIT_SENSORS = 'INIT_SENSORS'
 
-function getSensorData () {
-  return bind(fetch('/sensors.data', {
+function findSensors () {
+  return bind(fetch('/sensors.find', {
     method: 'POST'
-  }), sensorData, (err) => console.warn(err))
+  }), initSensors, (err) => console.warn(err))
+}
+
+function getSensorData (path) {
+	return bind(fetch('/sensor.data', {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			path: path
+		})
+	}), deviceData, (err) => console.warn(err))
+}
+
+function getMotorData (path) {
+	return bind(fetch('/motor.data', {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			path: path
+		})
+	}), deviceData, (err) => console.warn(err))
+}
+
+function deviceData (data) {
+	return {
+		type: DEVICE_DATA,
+		payload: data
+	}
 }
 
 function setSensorMode (path, mode) {
@@ -23,16 +57,19 @@ function setSensorMode (path, mode) {
 	})
 }
 
-function sensorData (data) {
+function initSensors (data) {
   return {
-    type: SENSOR_DATA,
+    type: INIT_SENSORS,
     payload: data
   }
 }
 
 export {
-  SENSOR_DATA,
+  DEVICE_DATA,
+  INIT_SENSORS,
 
   setSensorMode,
-  getSensorData
+  getSensorData,
+  getMotorData,
+  findSensors
 }

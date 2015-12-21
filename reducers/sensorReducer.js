@@ -1,8 +1,8 @@
-import {SENSOR_DATA} from '../actions/sensors'
+import {DEVICE_DATA, INIT_SENSORS} from '../actions/sensors'
 
 function reducer (state={}, action) {
   switch (action.type) {
-    case SENSOR_DATA:
+    case INIT_SENSORS:
       return {
         ...state,
         sensors: action.payload.currentDevices

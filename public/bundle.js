@@ -147,48 +147,89 @@ exports.initializeApp = initializeApp;
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-		value: true
+	value: true
 });
-exports.getSensorData = exports.setSensorMode = exports.SENSOR_DATA = undefined;
+exports.findSensors = exports.getMotorData = exports.getSensorData = exports.setSensorMode = exports.INIT_SENSORS = exports.DEVICE_DATA = undefined;
 
 var _reduxEffectsFetch = require('redux-effects-fetch');
 
 var _reduxEffects = require('redux-effects');
 
-var SENSOR_DATA = 'SENSOR_DATA';
+var DEVICE_DATA = 'DEVICE_DATA';
+var INIT_SENSORS = 'INIT_SENSORS';
 
-function getSensorData() {
-		return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/sensors.data', {
-				method: 'POST'
-		}), sensorData, function (err) {
-				return console.warn(err);
-		});
+function findSensors() {
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/sensors.find', {
+		method: 'POST'
+	}), initSensors, function (err) {
+		return console.warn(err);
+	});
+}
+
+function getSensorData(path) {
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/sensor.data', {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			path: path
+		})
+	}), deviceData, function (err) {
+		return console.warn(err);
+	});
+}
+
+function getMotorData(path) {
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/motor.data', {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			path: path
+		})
+	}), deviceData, function (err) {
+		return console.warn(err);
+	});
+}
+
+function deviceData(data) {
+	return {
+		type: DEVICE_DATA,
+		payload: data
+	};
 }
 
 function setSensorMode(path, mode) {
-		return (0, _reduxEffectsFetch.fetch)('/sensor.mode', {
-				method: 'POST',
-				headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-						path: path,
-						mode: mode
-				})
-		});
+	return (0, _reduxEffectsFetch.fetch)('/sensor.mode', {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			path: path,
+			mode: mode
+		})
+	});
 }
 
-function sensorData(data) {
-		return {
-				type: SENSOR_DATA,
-				payload: data
-		};
+function initSensors(data) {
+	return {
+		type: INIT_SENSORS,
+		payload: data
+	};
 }
 
-exports.SENSOR_DATA = SENSOR_DATA;
+exports.DEVICE_DATA = DEVICE_DATA;
+exports.INIT_SENSORS = INIT_SENSORS;
 exports.setSensorMode = setSensorMode;
 exports.getSensorData = getSensorData;
+exports.getMotorData = getMotorData;
+exports.findSensors = findSensors;
 
 },{"redux-effects":394,"redux-effects-fetch":388}],4:[function(require,module,exports){
 'use strict';
@@ -688,7 +729,7 @@ var SensorReadOut = (function (_Component) {
 			var _this2 = this;
 
 			setInterval(function () {
-				return _this2.props.dispatch((0, _sensors.getSensorData)());
+				return _this2.props.dispatch((0, _sensors.findSensors)());
 			}, 2000);
 		}
 	}, {
@@ -1402,6 +1443,20 @@ var ColorSensor = (function (_Component) {
 			}
 		}
 	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			var _this2 = this;
+
+			this.interval = setInterval(function () {
+				return _this2.props.dispatch((0, _sensors.getSensorData)(_this2.props.path));
+			});
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			clearInterval(this.interval);
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var color = this.colorValue();
@@ -1446,6 +1501,20 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var styles = {
+	container: {
+		display: 'flex',
+		padding: 20
+	},
+	dropDown: {
+		marginTop: '-15px',
+		flex: 1,
+		left: -20
+	}
+};
+
+var items = [{ payload: 'degrees', text: 'Degrees' }, { payload: 'rotations', text: 'Rotations' }, { payload: 'power', text: 'Power' }];
+
 var Motor = (function (_Component) {
 	_inherits(Motor, _Component);
 
@@ -1456,12 +1525,21 @@ var Motor = (function (_Component) {
 	}
 
 	_createClass(Motor, [{
+		key: 'swapMode',
+		value: function swapMode(e, i, item) {
+			console.log(item.payload);
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
 				'div',
-				null,
-				'Motor info'
+				{ style: styles.container },
+				_react2.default.createElement(_lib.DropDownMenu, {
+					style: styles.dropDown,
+					menuItems: items,
+					onChange: this.swapMode.bind(this) }),
+				_react2.default.createElement('div', { style: merge(styles.color, { backgroundColor: color }) })
 			);
 		}
 	}]);
@@ -80604,7 +80682,7 @@ function reducer() {
   var action = arguments[1];
 
   switch (action.type) {
-    case _sensors.SENSOR_DATA:
+    case _sensors.INIT_SENSORS:
       return _extends({}, state, {
         sensors: action.payload.currentDevices
       });
