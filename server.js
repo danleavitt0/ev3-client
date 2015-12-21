@@ -65,7 +65,7 @@ app.post('/file.getAll', function (req, res) {
 
 app.post('/sensor.data', function (req, res) {
   var readPath = path.join(req.body.path, req.body.ext || 'value0')
-  fs.readFile(readPath, function (err, data) {
+  fs.readFile(readPath, 'utf-8', function (err, data) {
     if (err) {
       res.json({
         ok: false,
@@ -74,7 +74,10 @@ app.post('/sensor.data', function (req, res) {
     } else {
       res.json({
         ok: true,
-        data: data
+        data: {
+          value: data.trim(),
+          port: req.body.port
+        }
       })
     }
   })

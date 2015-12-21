@@ -1,4 +1,5 @@
 import {DEVICE_DATA, INIT_SENSORS} from '../actions/sensors'
+import setProp from '@f/set-prop'
 
 function reducer (state={}, action) {
   switch (action.type) {
@@ -7,6 +8,8 @@ function reducer (state={}, action) {
         ...state,
         sensors: action.payload.currentDevices
       }
+    case DEVICE_DATA:
+    	return setProp(state.sensors.currentDevices[action.payload.port].value, state, action.payload.value)
   }
   return state
 }

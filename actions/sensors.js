@@ -10,7 +10,7 @@ function findSensors () {
   }), initSensors, (err) => console.warn(err))
 }
 
-function getSensorData (path) {
+function getSensorData (path, port) {
 	return bind(fetch('/sensor.data', {
 		method: 'POST',
 		headers: {
@@ -18,7 +18,8 @@ function getSensorData (path) {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			path: path
+			path: path,
+			port: port
 		})
 	}), deviceData, (err) => console.warn(err))
 }
