@@ -147,9 +147,9 @@ exports.initializeApp = initializeApp;
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+		value: true
 });
-exports.getSensorData = exports.SENSOR_DATA = undefined;
+exports.getSensorData = exports.setSensorMode = exports.SENSOR_DATA = undefined;
 
 var _reduxEffectsFetch = require('redux-effects-fetch');
 
@@ -158,21 +158,36 @@ var _reduxEffects = require('redux-effects');
 var SENSOR_DATA = 'SENSOR_DATA';
 
 function getSensorData() {
-  return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/sensors.data', {
-    method: 'POST'
-  }), sensorData, function (err) {
-    return console.warn(err);
-  });
+		return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/sensors.data', {
+				method: 'POST'
+		}), sensorData, function (err) {
+				return console.warn(err);
+		});
+}
+
+function setSensorMode(path, mode) {
+		return (0, _reduxEffectsFetch.fetch)('/sensor.mode', {
+				method: 'POST',
+				headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+						path: path,
+						mode: mode
+				})
+		});
 }
 
 function sensorData(data) {
-  return {
-    type: SENSOR_DATA,
-    payload: data
-  };
+		return {
+				type: SENSOR_DATA,
+				payload: data
+		};
 }
 
 exports.SENSOR_DATA = SENSOR_DATA;
+exports.setSensorMode = setSensorMode;
 exports.getSensorData = getSensorData;
 
 },{"redux-effects":394,"redux-effects-fetch":388}],4:[function(require,module,exports){
@@ -534,7 +549,19 @@ function motor(params, props) {
 
 function color(params, props) {
 	icon = 'color_lens';
-	return _react2.default.createElement(_colorSensor2.default, null);
+	var path = props.path;
+	var port = props.port;
+	var dispatch = props.dispatch;
+	var value = props.value;
+	var mode = props.mode;
+
+	return _react2.default.createElement(_colorSensor2.default, {
+		path: path,
+		port: port,
+		dispatch: dispatch,
+		mode: mode,
+		value: value
+	});
 }
 
 function noDevice(params, props) {
@@ -569,20 +596,13 @@ var Sensor = (function (_Component) {
 	function Sensor(props) {
 		_classCallCheck(this, Sensor);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Sensor).call(this, props));
-
-		_this.state = {
-			data: '',
-			mode: ''
-		};
-		return _this;
+		return _possibleConstructorReturn(this, Object.getPrototypeOf(Sensor).call(this, props));
 	}
 
 	_createClass(Sensor, [{
 		key: 'render',
 		value: function render() {
-			console.log(this.props);
-			var widget = component(this.props.type || '*');
+			var widget = component(this.props.type || '*', this.props);
 			return _react2.default.createElement(
 				'div',
 				{ style: styles.container },
@@ -675,10 +695,18 @@ var SensorReadOut = (function (_Component) {
 		key: 'render',
 		value: function render() {
 			var sensors = this.props.sensors.sensors;
+			var dispatch = this.props.dispatch;
 
 			var widgets = [];
 			for (var key in sensors) {
-				widgets.push(_react2.default.createElement(_sensor2.default, { key: key, port: key, type: sensors[key].type }));
+				widgets.push(_react2.default.createElement(_sensor2.default, {
+					key: key,
+					port: key,
+					dispatch: dispatch,
+					path: sensors[key].path,
+					type: sensors[key].type,
+					value: sensors[key].value,
+					mode: sensors[key].mode }));
 			}
 			return _react2.default.createElement(
 				'div',
@@ -690,20 +718,6 @@ var SensorReadOut = (function (_Component) {
 
 	return SensorReadOut;
 })(_react.Component);
-
-SensorReadOut.defaultProps = {
-	sensors: [{
-		port: 'A',
-		type: 'color',
-		value: 45,
-		mode: 'color'
-	}, {
-		port: 'B',
-		type: 'motor',
-		value: 2000,
-		mode: 'degrees'
-	}]
-};
 
 exports.default = SensorReadOut;
 
@@ -1321,6 +1335,8 @@ var _react2 = _interopRequireDefault(_react);
 
 var _lib = require('material-ui/lib');
 
+var _sensors = require('../../actions/sensors');
+
 var _utils = require('../utils');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -1333,7 +1349,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var styles = {
 	container: {
-		display: 'flex'
+		display: 'flex',
+		padding: 20
 	},
 	dropDown: {
 		marginTop: '-15px',
@@ -1343,8 +1360,20 @@ var styles = {
 	color: {
 		height: 30,
 		width: 30,
-		border: '1px solid #333'
+		border: '1px solid rgba(51, 51, 51, 0.3)',
+		borderRadius: '50%'
 	}
+};
+
+var colors = {
+	'0': 'black',
+	'1': 'black',
+	'2': 'blue',
+	'3': 'green',
+	'4': 'yellow',
+	'5': 'red',
+	'6': 'white',
+	'7': 'brown'
 };
 
 var items = [{ payload: 'COL-REFLECT', text: 'Reflected Light Intensity' }, { payload: 'COL-COLOR', text: 'Color' }];
@@ -1355,22 +1384,36 @@ var ColorSensor = (function (_Component) {
 	function ColorSensor(props) {
 		_classCallCheck(this, ColorSensor);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ColorSensor).call(this, props));
-
-		_this.state = {
-			color: 'blue'
-		};
-		return _this;
+		return _possibleConstructorReturn(this, Object.getPrototypeOf(ColorSensor).call(this, props));
 	}
 
 	_createClass(ColorSensor, [{
+		key: 'swapMode',
+		value: function swapMode(e, i, item) {
+			this.props.dispatch((0, _sensors.setSensorMode)(this.props.path, item.payload));
+		}
+	}, {
+		key: 'colorValue',
+		value: function colorValue() {
+			if (this.props.mode === 'COL-COLOR') {
+				return colors[this.props.value];
+			} else {
+				return 'rgba(0, 0, 0, ' + (100 - this.props.value) / 100 + ')';
+			}
+		}
+	}, {
 		key: 'render',
 		value: function render() {
+			var color = this.colorValue();
+			console.log(color);
 			return _react2.default.createElement(
 				'div',
 				{ style: styles.container },
-				_react2.default.createElement(_lib.DropDownMenu, { style: styles.dropDown, menuItems: items }),
-				_react2.default.createElement('div', { style: (0, _utils.merge)(styles.color, { backgroundColor: this.state.color }) })
+				_react2.default.createElement(_lib.DropDownMenu, {
+					style: styles.dropDown,
+					menuItems: items,
+					onChange: this.swapMode.bind(this) }),
+				_react2.default.createElement('div', { style: (0, _utils.merge)(styles.color, { backgroundColor: color }) })
 			);
 		}
 	}]);
@@ -1380,7 +1423,7 @@ var ColorSensor = (function (_Component) {
 
 exports.default = ColorSensor;
 
-},{"../utils":13,"material-ui/lib":80,"react":386}],19:[function(require,module,exports){
+},{"../../actions/sensors":3,"../utils":13,"material-ui/lib":80,"react":386}],19:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();

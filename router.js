@@ -31,7 +31,7 @@ function editor (params, props) {
     file={props.file}
     message={props.state.saveMessage}
     sensors={props.sensors}
-    {...props}/>
+    {...props} />
 }
 
 function notFound (params, props) {

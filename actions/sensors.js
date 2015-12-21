@@ -9,6 +9,20 @@ function getSensorData () {
   }), sensorData, (err) => console.warn(err))
 }
 
+function setSensorMode (path, mode) {
+	return fetch('/sensor.mode', {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			path: path,
+			mode: mode
+		})
+	})
+}
+
 function sensorData (data) {
   return {
     type: SENSOR_DATA,
@@ -18,5 +32,7 @@ function sensorData (data) {
 
 export {
   SENSOR_DATA,
+
+  setSensorMode,
   getSensorData
 }

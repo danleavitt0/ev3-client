@@ -5,6 +5,7 @@ var bodyParser = require('body-parser')
 var fs = require('fs')
 var ip = require('ip')
 var cors = require('cors')
+var path = require('path')
 var livereload = require('express-livereload')
 var spawn = require('child_process').spawn
 var app = express()
@@ -62,13 +63,29 @@ app.post('/file.getAll', function (req, res) {
   })
 })
 
-app.post('/sensors.data', function (req,res) {
+app.post('/sensor.mode', function (req, res) {
+  var writePath = path.join(req.body.path, 'mode')
+  fs.writeFile(writePath, req.body.mode, function (err) {
+    if (err) {
+      res.json({ 
+        ok: false,
+        msg: err
+      })
+    } else {
+      res.json({ ok: true })
+    }
+  })
+})
+
+app.post('/sensors.data', function (req, res) {
   var currentDevices = ports.reduce(function (obj, port) {
     try {
       var path = devices(port)
       obj[port] = {
         path: path,
-        type: fs.readFileSync(path + '/driver_name', 'utf-8').trim()
+        type: fs.readFileSync(path + '/driver_name', 'utf-8').trim(),
+        value: fs.readFileSync(path + '/value0', 'utf-8').trim(),
+        mode: fs.readFileSync(path + '/mode', 'utf-8').trim()
       }
     } catch (e) {
       obj[port] = {
@@ -77,6 +94,12 @@ app.post('/sensors.data', function (req,res) {
     }
     return obj
   }, {})
+  currentDevices['1'] = {
+    path: '/sys/class/lego-sensor/lego-ev3-color',
+    type: 'lego-ev3-color',
+    mode: 'COL-COLOR',
+    value: 4
+  }
   res.json({
     ok: true,
     currentDevices: currentDevices
