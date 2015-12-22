@@ -3,6 +3,7 @@ import {bind} from 'redux-effects'
 
 const DEVICE_DATA = 'DEVICE_DATA'
 const INIT_SENSORS = 'INIT_SENSORS'
+const SET_MODE = 'SET_MODE'
 
 function findSensors () {
   return bind(fetch('/sensors.find', {
@@ -45,17 +46,29 @@ function deviceData (data) {
 }
 
 function setSensorMode (path, mode) {
-	return fetch('/sensor.mode', {
-		method: 'POST',
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			path: path,
-			mode: mode
-		})
-	})
+	return [
+		fetch('/sensor.mode', {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				path: path
+			})
+		}),
+		setMode(mode)
+	]
+}
+
+function setMode (mode, port) {
+	return {
+		type: SET_MODE,
+		payload: {
+			mode: mode,
+			port: port
+		}
+	}
 }
 
 function initSensors (data) {
@@ -68,6 +81,7 @@ function initSensors (data) {
 export {
   DEVICE_DATA,
   INIT_SENSORS,
+  SET_MODE,
 
   setSensorMode,
   getSensorData,

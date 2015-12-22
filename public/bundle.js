@@ -149,7 +149,7 @@ exports.initializeApp = initializeApp;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.findSensors = exports.getMotorData = exports.getSensorData = exports.setSensorMode = exports.INIT_SENSORS = exports.DEVICE_DATA = undefined;
+exports.findSensors = exports.getMotorData = exports.getSensorData = exports.setSensorMode = exports.SET_MODE = exports.INIT_SENSORS = exports.DEVICE_DATA = undefined;
 
 var _reduxEffectsFetch = require('redux-effects-fetch');
 
@@ -157,6 +157,7 @@ var _reduxEffects = require('redux-effects');
 
 var DEVICE_DATA = 'DEVICE_DATA';
 var INIT_SENSORS = 'INIT_SENSORS';
+var SET_MODE = 'SET_MODE';
 
 function findSensors() {
 	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/sensors.find', {
@@ -205,17 +206,26 @@ function deviceData(data) {
 }
 
 function setSensorMode(path, mode) {
-	return (0, _reduxEffectsFetch.fetch)('/sensor.mode', {
+	return [(0, _reduxEffectsFetch.fetch)('/sensor.mode', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			path: path,
-			mode: mode
+			path: path
 		})
-	});
+	}), setMode(mode)];
+}
+
+function setMode(mode, port) {
+	return {
+		type: SET_MODE,
+		payload: {
+			mode: mode,
+			port: port
+		}
+	};
 }
 
 function initSensors(data) {
@@ -227,6 +237,7 @@ function initSensors(data) {
 
 exports.DEVICE_DATA = DEVICE_DATA;
 exports.INIT_SENSORS = INIT_SENSORS;
+exports.SET_MODE = SET_MODE;
 exports.setSensorMode = setSensorMode;
 exports.getSensorData = getSensorData;
 exports.getMotorData = getMotorData;
@@ -80877,14 +80888,19 @@ function reducer() {
       return _extends({}, state, {
         sensors: action.payload.currentDevices
       });
+    case _sensors.SET_MODE:
+      return setDeviceProp(state, action.payload.port, 'mode', action.payload.mode);
     case _sensors.DEVICE_DATA:
-      var sensor = _extends({}, state.sensors[action.payload.data.port], {
-        value: action.payload.data.value
-      });
-      var path = action.payload.data.port;
-      return (0, _setProp2.default)('sensors.' + path, state, sensor);
+      return setDeviceProp(state, action.payload.data.port, 'value', action.payload.date.value);
   }
   return state;
+}
+
+function setDeviceProp(state, path, key, value) {
+  var device = _extends({}, state.sensors[path], {
+    key: value
+  });
+  return (0, _setProp2.default)('sensors.' + path, state, device);
 }
 
 exports.default = reducer;

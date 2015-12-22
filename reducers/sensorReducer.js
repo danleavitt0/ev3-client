@@ -1,22 +1,27 @@
-import {DEVICE_DATA, INIT_SENSORS} from '../actions/sensors'
+import {DEVICE_DATA, INIT_SENSORS, SET_MODE} from '../actions/sensors'
 import setProp from '@f/set-prop'
 
-function reducer (state={}, action) {
+function reducer (state = {}, action) {
   switch (action.type) {
     case INIT_SENSORS:
       return {
         ...state,
         sensors: action.payload.currentDevices
       }
+    case SET_MODE:
+   		return setDeviceProp(state, action.payload.port, 'mode', action.payload.mode)
     case DEVICE_DATA:
-    	const sensor = {
-    		...state.sensors[action.payload.data.port],
-    		value: action.payload.data.value
-    	}
-    	const path = action.payload.data.port
-    	return setProp(`sensors.${path}`, state, sensor)
+    	return setDeviceProp(state, action.payload.data.port, 'value', action.payload.date.value)
   }
   return state
+}
+
+function setDeviceProp (state, path, key, value) {
+	const device = {
+		...state.sensors[path],
+		key: value
+	}
+	return setProp(`sensors.${path}`, state, device)
 }
 
 export default reducer
