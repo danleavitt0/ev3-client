@@ -17,7 +17,7 @@ function reducer (state = {}, action) {
   return state
 }
 
-function mergeSensors (sensors, update) {
+function mergeSensors (sensors=[], update) {
 	for (let key in update) {
 		if (!sensors[key].type || sensors[key].type === 'No device connected' || update[key] === 'No device connected')
 			sensors[key] = update[key]
