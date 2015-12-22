@@ -80902,7 +80902,7 @@ function reducer() {
 }
 
 function mergeSensors(sensors, update) {
-  var newSensors = sensors || [];
+  var newSensors = sensors || {};
   for (var key in update) {
     if (!newSensors[key] || newSensors[key].type === 'No device connected' || update[key] === 'No device connected') newSensors[key] = update[key];
   }
