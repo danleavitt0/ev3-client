@@ -80882,9 +80882,7 @@ function reducer() {
         value: action.payload.data.value
       });
       var path = action.payload.data.port;
-      return _extends({}, state, {
-        sensors: (0, _setProp2.default)('state.sensors.' + path, state.sensors, sensor)
-      });
+      return (0, _setProp2.default)('sensors.' + path, state, sensor);
   }
   return state;
 }
