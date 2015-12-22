@@ -9,7 +9,11 @@ function reducer (state={}, action) {
         sensors: action.payload.currentDevices
       }
     case DEVICE_DATA:
-    	return setProp(state.sensors[action.payload.data.port].value, state, action.payload.data.value)
+    	const sensor = {
+    		...state.sensors[action.payload.data.port],
+    		value: action.payload.data.value
+    	}
+    	return setProp(state.sensors[action.payload.data.port], state, sensor)
   }
   return state
 }

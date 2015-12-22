@@ -80878,7 +80878,10 @@ function reducer() {
         sensors: action.payload.currentDevices
       });
     case _sensors.DEVICE_DATA:
-      return (0, _setProp2.default)(state.sensors[action.payload.data.port].value, state, action.payload.data.value);
+      var sensor = _extends({}, state.sensors[action.payload.data.port], {
+        value: action.payload.data.value
+      });
+      return (0, _setProp2.default)(state.sensors[action.payload.data.port], state, sensor);
   }
   return state;
 }
