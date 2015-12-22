@@ -80906,7 +80906,7 @@ function mergeSensors() {
   var update = arguments[1];
 
   for (var key in update) {
-    if (!sensors[key].type || sensors[key].type === 'No device connected' || update[key] === 'No device connected') sensors[key] = update[key];
+    if (!sensors[key] || sensors[key].type === 'No device connected' || update[key] === 'No device connected') sensors[key] = update[key];
   }
   return sensors;
 }
