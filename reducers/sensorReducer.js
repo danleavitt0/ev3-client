@@ -11,7 +11,7 @@ function reducer (state = {}, action) {
     case SET_MODE:
    		return setDeviceProp(state, action.payload.port, 'mode', action.payload.mode)
     case DEVICE_DATA:
-    	return setDeviceProp(state, action.payload.data.port, 'value', action.payload.date.value)
+    	return setDeviceProp(state, action.payload.data.port, 'value', action.payload.data.value)
   }
   return state
 }

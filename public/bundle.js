@@ -205,7 +205,7 @@ function deviceData(data) {
 	};
 }
 
-function setSensorMode(path, mode) {
+function setSensorMode(path, mode, port) {
 	return [(0, _reduxEffectsFetch.fetch)('/sensor.mode', {
 		method: 'POST',
 		headers: {
@@ -213,9 +213,10 @@ function setSensorMode(path, mode) {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			path: path
+			path: path,
+			mode: mode
 		})
-	}), setMode(mode)];
+	}), setMode(mode, port)];
 }
 
 function setMode(mode, port) {
@@ -1443,7 +1444,7 @@ var ColorSensor = (function (_Component) {
 	_createClass(ColorSensor, [{
 		key: 'swapMode',
 		value: function swapMode(e, i, item) {
-			this.props.dispatch((0, _sensors.setSensorMode)(this.props.path, item.payload));
+			this.props.dispatch((0, _sensors.setSensorMode)(this.props.path, item.payload, this.props.port));
 		}
 	}, {
 		key: 'colorValue',
@@ -80891,7 +80892,7 @@ function reducer() {
     case _sensors.SET_MODE:
       return setDeviceProp(state, action.payload.port, 'mode', action.payload.mode);
     case _sensors.DEVICE_DATA:
-      return setDeviceProp(state, action.payload.data.port, 'value', action.payload.date.value);
+      return setDeviceProp(state, action.payload.data.port, 'value', action.payload.data.value);
   }
   return state;
 }

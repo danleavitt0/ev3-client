@@ -45,7 +45,7 @@ function deviceData (data) {
 	}
 }
 
-function setSensorMode (path, mode) {
+function setSensorMode (path, mode, port) {
 	return [
 		fetch('/sensor.mode', {
 			method: 'POST',
@@ -54,10 +54,11 @@ function setSensorMode (path, mode) {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				path: path
+				path: path,
+				mode: mode
 			})
 		}),
-		setMode(mode)
+		setMode(mode, port)
 	]
 }
 
