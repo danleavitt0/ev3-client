@@ -80878,6 +80878,10 @@ var _setProp = require('@f/set-prop');
 
 var _setProp2 = _interopRequireDefault(_setProp);
 
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function reducer() {
@@ -80887,7 +80891,7 @@ function reducer() {
   switch (action.type) {
     case _sensors.INIT_SENSORS:
       return _extends({}, state, {
-        sensors: action.payload.currentDevices
+        sensors: mergeSensors(_lodash2.default.clone(state.sensors, true), action.payload.currentDevices)
       });
     case _sensors.SET_MODE:
       return setDeviceProp(state, action.payload.port, 'mode', action.payload.mode);
@@ -80895,6 +80899,13 @@ function reducer() {
       return setDeviceProp(state, action.payload.data.port, 'value', action.payload.data.value);
   }
   return state;
+}
+
+function mergeSensors(sensors, update) {
+  for (var key in sensors) {
+    if (sensors[key].type === 'No device connected' || update[key] === 'No device connected') sensors[key] = update[key];
+  }
+  return sensors;
 }
 
 function setDeviceProp(state, path, key, value) {
@@ -80906,7 +80917,7 @@ function setDeviceProp(state, path, key, value) {
 
 exports.default = reducer;
 
-},{"../actions/sensors":3,"@f/set-prop":29}],418:[function(require,module,exports){
+},{"../actions/sensors":3,"@f/set-prop":29,"lodash":46}],418:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
