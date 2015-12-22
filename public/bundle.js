@@ -80901,14 +80901,12 @@ function reducer() {
   return state;
 }
 
-function mergeSensors() {
-  var sensors = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-  var update = arguments[1];
-
+function mergeSensors(sensors, update) {
+  var newSensors = sensors || [];
   for (var key in update) {
-    if (!sensors[key] || sensors[key].type === 'No device connected' || update[key] === 'No device connected') sensors[key] = update[key];
+    if (!newSensors[key] || newSensors[key].type === 'No device connected' || update[key] === 'No device connected') newSensors[key] = update[key];
   }
-  return sensors;
+  return newSensors;
 }
 
 function setDeviceProp(state, path, key, value) {

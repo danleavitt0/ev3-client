@@ -17,12 +17,13 @@ function reducer (state = {}, action) {
   return state
 }
 
-function mergeSensors (sensors=[], update) {
+function mergeSensors (sensors, update) {
+	var newSensors = sensors || []
 	for (let key in update) {
-		if (!sensors[key] || sensors[key].type === 'No device connected' || update[key] === 'No device connected')
-			sensors[key] = update[key]
+		if (!newSensors[key] || newSensors[key].type === 'No device connected' || update[key] === 'No device connected')
+			newSensors[key] = update[key]
 	}
-	return sensors
+	return newSensors
 }
 
 function setDeviceProp (state, path, key, value) {
