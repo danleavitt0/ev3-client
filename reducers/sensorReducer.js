@@ -28,8 +28,8 @@ function mergeSensors (sensors=[], update) {
 function setDeviceProp (state, path, key, value) {
 	const device = {
 		...state.sensors[path],
-		key: value
 	}
+	device[key] = value
 	return setProp(`sensors.${path}`, state, device)
 }
 

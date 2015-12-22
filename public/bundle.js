@@ -80912,9 +80912,8 @@ function mergeSensors() {
 }
 
 function setDeviceProp(state, path, key, value) {
-  var device = _extends({}, state.sensors[path], {
-    key: value
-  });
+  var device = _extends({}, state.sensors[path]);
+  device[key] = value;
   return (0, _setProp2.default)('sensors.' + path, state, device);
 }
 
