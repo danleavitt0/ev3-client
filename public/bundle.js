@@ -80881,7 +80881,8 @@ function reducer() {
       var sensor = _extends({}, state.sensors[action.payload.data.port], {
         value: action.payload.data.value
       });
-      return (0, _setProp2.default)(state.sensors[action.payload.data.port], state, sensor);
+      var path = action.payload.data.port;
+      return (0, _setProp2.default)('state.sensors.' + path, state, sensor);
   }
   return state;
 }

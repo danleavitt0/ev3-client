@@ -13,7 +13,8 @@ function reducer (state={}, action) {
     		...state.sensors[action.payload.data.port],
     		value: action.payload.data.value
     	}
-    	return setProp(state.sensors[action.payload.data.port], state, sensor)
+    	const path = action.payload.data.port
+    	return setProp(`state.sensors.${path}`, state, sensor)
   }
   return state
 }
