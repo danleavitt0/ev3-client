@@ -582,17 +582,29 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var component = (0, _enroute2.default)({
 	'lego-ev3-l-motor': motor,
+	'lego-ev3-m-motor': motor,
 	'lego-ev3-color': color,
 	'lego-ev3-touch': touch,
 	'lego-ev3-us': ultrasonic,
-	'*': noDevice
+	'*': motor
 });
 
 var icon;
 
 function motor(params, props) {
 	icon = 'settings';
-	return _react2.default.createElement(_motor2.default, null);
+	var path = props.path;
+	var port = props.port;
+	var dispatch = props.dispatch;
+	var value = props.value;
+	var mode = props.mode;
+
+	return _react2.default.createElement(_motor2.default, {
+		path: path,
+		port: port,
+		dispatch: dispatch,
+		mode: mode,
+		value: value });
 }
 
 function color(params, props) {
@@ -1555,7 +1567,7 @@ var styles = {
 	}
 };
 
-var items = [{ payload: ['position', 1], text: 'Degrees' }, { payload: ['position', 360], text: 'Rotations' }, { payload: ['speed_sp'], text: 'Power' }];
+var items = [{ payload: ['position', 1], text: 'Degrees' }, { payload: ['position', 360], text: 'Rotations' }, { payload: ['speed_sp', 1], text: 'Power' }];
 
 var Motor = (function (_Component) {
 	_inherits(Motor, _Component);
@@ -1569,6 +1581,9 @@ var Motor = (function (_Component) {
 	_createClass(Motor, [{
 		key: 'swapMode',
 		value: function swapMode(e, i, item) {
+			this.setState({
+				divisor: item.payload[1]
+			});
 			this.props.dispatch((0, _sensors.setSensorMode)(this.props.path, item.payload[0], this.props.port));
 		}
 	}, {
@@ -1588,20 +1603,18 @@ var Motor = (function (_Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var value = this.refs.dropdown && this.refs.dropdown.value[1] ? this.props.value / this.refs.dropdown.value[1] : this.props.value;
 			return _react2.default.createElement(
 				'div',
 				{ style: styles.container },
 				_react2.default.createElement(_lib.DropDownMenu, {
 					style: styles.dropDown,
 					menuItems: items,
-					onChange: this.swapMode.bind(this),
-					ref: 'dropdown' }),
+					onChange: this.swapMode.bind(this) }),
 				_react2.default.createElement(
 					'div',
 					null,
 					' ',
-					value,
+					this.props.value / this.state.divisor,
 					' '
 				)
 			);
