@@ -73,6 +73,5 @@ export {
 
   setSensorMode,
   getSensorData,
-  getMotorData,
   findSensors
 }

@@ -149,7 +149,7 @@ exports.initializeApp = initializeApp;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.findSensors = exports.getMotorData = exports.getSensorData = exports.setSensorMode = exports.SET_MODE = exports.INIT_SENSORS = exports.DEVICE_DATA = undefined;
+exports.findSensors = exports.getSensorData = exports.setSensorMode = exports.SET_MODE = exports.INIT_SENSORS = exports.DEVICE_DATA = undefined;
 
 var _reduxEffectsFetch = require('redux-effects-fetch');
 
@@ -226,7 +226,6 @@ exports.INIT_SENSORS = INIT_SENSORS;
 exports.SET_MODE = SET_MODE;
 exports.setSensorMode = setSensorMode;
 exports.getSensorData = getSensorData;
-exports.getMotorData = getMotorData;
 exports.findSensors = findSensors;
 
 },{"redux-effects":403,"redux-effects-fetch":397}],4:[function(require,module,exports){
