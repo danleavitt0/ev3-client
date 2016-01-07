@@ -183,21 +183,6 @@ function getSensorData(path, port) {
 	});
 }
 
-function getMotorData(path) {
-	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/motor.data', {
-		method: 'POST',
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			path: path
-		})
-	}), deviceData, function (err) {
-		return console.warn(err);
-	});
-}
-
 function deviceData(data) {
 	return {
 		type: DEVICE_DATA,
@@ -1569,7 +1554,7 @@ var styles = {
 	}
 };
 
-var items = [{ payload: 'position', text: 'Degrees' }, { payload: 'position', text: 'Rotations' }, { payload: 'speed_sp', text: 'Power' }];
+var items = [{ payload: ['position', 1], text: 'Degrees' }, { payload: ['position', 360], text: 'Rotations' }, { payload: ['speed_sp'], text: 'Power' }];
 
 var Motor = (function (_Component) {
 	_inherits(Motor, _Component);
@@ -1583,23 +1568,39 @@ var Motor = (function (_Component) {
 	_createClass(Motor, [{
 		key: 'swapMode',
 		value: function swapMode(e, i, item) {
-			console.log(item.payload);
+			this.props.dispatch(setSensorMode(this.props.path, item.payload[0], this.props.port));
+		}
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			var _this2 = this;
+
+			this.interval = setInterval(function () {
+				return _this2.props.dispatch(getSensorData(_this2.props.path, _this2.props.port));
+			}, 500);
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			clearInterval(this.interval);
 		}
 	}, {
 		key: 'render',
 		value: function render() {
+			var value = this.refs.dropdown.value[1] ? this.props.value / this.refs.dropdown.value[1] : this.props.value;
 			return _react2.default.createElement(
 				'div',
 				{ style: styles.container },
 				_react2.default.createElement(_lib.DropDownMenu, {
 					style: styles.dropDown,
 					menuItems: items,
-					onChange: this.swapMode.bind(this) }),
+					onChange: this.swapMode.bind(this),
+					ref: 'dropdown' }),
 				_react2.default.createElement(
 					'div',
 					null,
 					' ',
-					this.props.value,
+					value,
 					' '
 				)
 			);
@@ -1828,7 +1829,7 @@ var UltrasonicSensor = (function (_Component) {
 					style: styles.dropDown,
 					menuItems: items,
 					onChange: this.swapMode.bind(this) }),
-				this.props.value
+				this.props.value / 10
 			);
 		}
 	}]);

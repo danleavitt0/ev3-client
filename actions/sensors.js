@@ -25,19 +25,6 @@ function getSensorData (path, port) {
 	}), deviceData, (err) => console.warn(err))
 }
 
-function getMotorData (path) {
-	return bind(fetch('/motor.data', {
-		method: 'POST',
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			path: path
-		})
-	}), deviceData, (err) => console.warn(err))
-}
-
 function deviceData (data) {
 	return {
 		type: DEVICE_DATA,

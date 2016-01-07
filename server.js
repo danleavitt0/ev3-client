@@ -83,23 +83,6 @@ app.post('/sensor.data', function (req, res) {
   })
 })
 
-app.post('/motor.data', function (req, res) {
-  var readPath = path.join(req.body.path, 'position_sp')
-  fs.readFile(readPath, function (err, data) {
-    if (err) {
-      res.json({
-        ok: false,
-        msg: err
-      })
-    } else {
-      res.json({
-        ok: true,
-        data: data
-      })
-    }
-  })
-})
-
 app.post('/sensor.mode', function (req, res) {
   var writePath = path.join(req.body.path, 'mode')
   fs.writeFile(writePath, req.body.mode, function (err) {
