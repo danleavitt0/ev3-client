@@ -167,7 +167,7 @@ function findSensors() {
 	});
 }
 
-function getSensorData(path, port) {
+function getSensorData(path, port, ext) {
 	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/sensor.data', {
 		method: 'POST',
 		headers: {
@@ -176,7 +176,8 @@ function getSensorData(path, port) {
 		},
 		body: JSON.stringify({
 			path: path,
-			port: port
+			port: port,
+			ext: ext
 		})
 	}), deviceData, function (err) {
 		return console.warn(err);
@@ -1598,7 +1599,7 @@ var Motor = (function (_Component) {
 			var _this2 = this;
 
 			this.interval = setInterval(function () {
-				return _this2.props.dispatch((0, _sensors.getSensorData)(_this2.props.path, _this2.props.port));
+				return _this2.props.dispatch((0, _sensors.getSensorData)(_this2.props.path, _this2.props.port, _this2.props.mode));
 			}, 500);
 		}
 	}, {
