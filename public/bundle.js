@@ -586,7 +586,7 @@ var component = (0, _enroute2.default)({
 	'lego-ev3-color': color,
 	'lego-ev3-touch': touch,
 	'lego-ev3-us': ultrasonic,
-	'*': motor
+	'*': noDevice
 });
 
 var icon;
@@ -659,6 +659,7 @@ function ultrasonic(params, props) {
 }
 
 function noDevice(params, props) {
+	icon = 'cancel';
 	return _react2.default.createElement(_noDevice2.default, null);
 }
 
@@ -1575,7 +1576,12 @@ var Motor = (function (_Component) {
 	function Motor(props) {
 		_classCallCheck(this, Motor);
 
-		return _possibleConstructorReturn(this, Object.getPrototypeOf(Motor).call(this, props));
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Motor).call(this, props));
+
+		_this.state = {
+			divisor: 1
+		};
+		return _this;
 	}
 
 	_createClass(Motor, [{
