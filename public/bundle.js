@@ -1569,7 +1569,7 @@ var styles = {
 	}
 };
 
-var items = [{ payload: 'degrees', text: 'Degrees' }, { payload: 'rotations', text: 'Rotations' }, { payload: 'power', text: 'Power' }];
+var items = [{ payload: 'position', text: 'Degrees' }, { payload: 'position', text: 'Rotations' }, { payload: 'speed_sp', text: 'Power' }];
 
 var Motor = (function (_Component) {
 	_inherits(Motor, _Component);
@@ -1812,6 +1812,11 @@ var UltrasonicSensor = (function (_Component) {
 		key: 'componentWillUnmount',
 		value: function componentWillUnmount() {
 			clearInterval(this.interval);
+		}
+	}, {
+		key: 'swapMode',
+		value: function swapMode(e, i, item) {
+			this.props.dispatch((0, _sensors.setSensorMode)(this.props.path, item.payload, this.props.port));
 		}
 	}, {
 		key: 'render',
