@@ -135,6 +135,5 @@ function createNode () {
 }
 
 var port = process.env.port || 3000
-livereload(app, config={watchDir: process.cwd() + "/public"})
 console.log('In your browser, navigate to ' + ip.address() + ':' + port)
 app.listen(port)
