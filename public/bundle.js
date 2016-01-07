@@ -1588,18 +1588,23 @@ var Motor = (function (_Component) {
 	_createClass(Motor, [{
 		key: 'swapMode',
 		value: function swapMode(e, i, item) {
+			var _this2 = this;
+
 			this.setState({
 				divisor: item.payload[1]
 			});
-			this.props.dispatch((0, _sensors.setSensorMode)(this.props.path, item.payload[0], this.props.port));
+			clearInterval(this.interval);
+			this.interval = setInterval(function () {
+				return _this2.props.dispatch((0, _sensors.getSensorData)(_this2.props.path, _this2.props.port, item.payload[0]));
+			}, 500);
 		}
 	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
-			var _this2 = this;
+			var _this3 = this;
 
 			this.interval = setInterval(function () {
-				return _this2.props.dispatch((0, _sensors.getSensorData)(_this2.props.path, _this2.props.port, _this2.props.mode));
+				return _this3.props.dispatch((0, _sensors.getSensorData)(_this3.props.path, _this3.props.port, _this3.props.mode));
 			}, 500);
 		}
 	}, {
@@ -1810,7 +1815,7 @@ var styles = {
 	}
 };
 
-var items = [{ payload: 'US-DIST-IN', text: 'Inches' }, { payload: 'US-DIST-CM', text: 'Centimeters' }];
+var items = [{ payload: 'US-DIST-CM', text: 'Centimeters' }, { payload: 'US-DIST-IN', text: 'Inches' }];
 
 var UltrasonicSensor = (function (_Component) {
 	_inherits(UltrasonicSensor, _Component);
