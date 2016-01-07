@@ -1707,7 +1707,7 @@ var TouchSensor = (function (_Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var color = this.colorValue();
+			var color = colors[this.props.value];
 			return _react2.default.createElement(
 				'div',
 				{ style: styles.container },
