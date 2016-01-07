@@ -1534,6 +1534,8 @@ var _react2 = _interopRequireDefault(_react);
 
 var _lib = require('material-ui/lib');
 
+var _sensors = require('../../actions/sensors');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1568,7 +1570,7 @@ var Motor = (function (_Component) {
 	_createClass(Motor, [{
 		key: 'swapMode',
 		value: function swapMode(e, i, item) {
-			this.props.dispatch(setSensorMode(this.props.path, item.payload[0], this.props.port));
+			this.props.dispatch((0, _sensors.setSensorMode)(this.props.path, item.payload[0], this.props.port));
 		}
 	}, {
 		key: 'componentDidMount',
@@ -1576,7 +1578,7 @@ var Motor = (function (_Component) {
 			var _this2 = this;
 
 			this.interval = setInterval(function () {
-				return _this2.props.dispatch(getSensorData(_this2.props.path, _this2.props.port));
+				return _this2.props.dispatch((0, _sensors.getSensorData)(_this2.props.path, _this2.props.port));
 			}, 500);
 		}
 	}, {
@@ -1612,7 +1614,7 @@ var Motor = (function (_Component) {
 
 exports.default = Motor;
 
-},{"material-ui/lib":89,"react":395}],20:[function(require,module,exports){
+},{"../../actions/sensors":3,"material-ui/lib":89,"react":395}],20:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
