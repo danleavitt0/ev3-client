@@ -17,10 +17,9 @@ var IS_SAVING = 'IS_SAVING';
 var FINISH_SERVER = 'FINISH_SERVER';
 var IS_LOADING = 'IS_LOADING';
 var IS_RUNNING = 'IS_RUNNING';
-var DEV_SERVER = 'http://localhost:3000';
 
 function startRun(file) {
-	return [(0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(DEV_SERVER + '/file.run', {
+	return [(0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/file.run', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -35,7 +34,7 @@ function startRun(file) {
 }
 
 function fetchSave(title, text) {
-	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(DEV_SERVER + '/file.save', {
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/file.save', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -59,7 +58,7 @@ function fetchFile(url) {
 }
 
 function stop() {
-	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(DEV_SERVER + '/file.stop', {
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/file.stop', {
 		method: 'POST'
 	}), finishServer, function (err) {
 		return console.warn(err);
@@ -1604,7 +1603,7 @@ var Motor = (function (_Component) {
 			var _this3 = this;
 
 			this.interval = setInterval(function () {
-				return _this3.props.dispatch((0, _sensors.getSensorData)(_this3.props.path, _this3.props.port, _this3.props.mode));
+				return _this3.props.dispatch((0, _sensors.getSensorData)(_this3.props.path, _this3.props.port, 'position'));
 			}, 500);
 		}
 	}, {
@@ -81343,7 +81342,7 @@ var _getFile2 = _interopRequireDefault(_getFile);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var middlewares = [_reduxMulti2.default, _reduxEffects2.default, _reduxEffectsFetch2.default, (0, _reduxEffectsEvents2.default)(), (0, _reduxEffectsLocation2.default)(), _getFile2.default, (0, _reduxLogger2.default)()];
+var middlewares = [_reduxMulti2.default, _reduxEffects2.default, _reduxEffectsFetch2.default, (0, _reduxEffectsEvents2.default)(), (0, _reduxEffectsLocation2.default)(), _getFile2.default];
 
 exports.default = function (initialState) {
   return _redux.applyMiddleware.apply(undefined, middlewares)(_redux.createStore)(_reducers2.default, initialState);

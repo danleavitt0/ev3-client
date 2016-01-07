@@ -7,11 +7,10 @@ const IS_SAVING = 'IS_SAVING'
 const FINISH_SERVER = 'FINISH_SERVER'
 const IS_LOADING = 'IS_LOADING'
 const IS_RUNNING = 'IS_RUNNING'
-const DEV_SERVER = 'http://localhost:3000'
 
 function startRun (file) {
 	return [
-		bind(fetch(DEV_SERVER + '/file.run', {
+		bind(fetch('/file.run', {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',
@@ -27,7 +26,7 @@ function startRun (file) {
 
 
 function fetchSave (title, text) {
-	return bind(fetch(DEV_SERVER + '/file.save', {
+	return bind(fetch('/file.save', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -50,7 +49,7 @@ function fetchFile (url) {
 }
 
 function stop () {
-	return bind(fetch(DEV_SERVER + '/file.stop', {
+	return bind(fetch('/file.stop', {
 		method: 'POST',
 	}), finishServer, (err) => console.warn(err))
 }
