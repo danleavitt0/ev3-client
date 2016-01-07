@@ -1588,7 +1588,7 @@ var Motor = (function (_Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var value = this.refs.dropdown.value[1] ? this.props.value / this.refs.dropdown.value[1] : this.props.value;
+			var value = this.refs.dropdown && this.refs.dropdown.value[1] ? this.props.value / this.refs.dropdown.value[1] : this.props.value;
 			return _react2.default.createElement(
 				'div',
 				{ style: styles.container },
