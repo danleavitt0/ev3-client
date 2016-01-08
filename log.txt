@@ -20,3 +20,6 @@ Started at January 8th 2016, 1:37:52 pm
 Started at January 8th 2016, 1:37:55 pm
 [ReferenceError: va is not defined]
 @@@
+Started at January 8th 2016, 1:45:07 pm
+[ReferenceError: va is not defined]
+@@@
