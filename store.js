@@ -18,8 +18,7 @@ const middlewares = [
   fetch,
   events(),
   location(),
-  getFile,
-  socketConnection(socket)
+  getFile
 ]
 
 export default initialState => applyMiddleware(...middlewares)(createStore)(reducer, initialState)
