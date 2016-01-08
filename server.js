@@ -53,7 +53,6 @@ app.post('/file.stop', function (req, res) {
     console.warn('no motors attached')
   }
   node = createNode()
-  io.emit('action', {type:'FINISH_SERVER', payload: {message: 'Run stopped'}})
   res.json({
     ok: true,
     message: 'Run stopped'
