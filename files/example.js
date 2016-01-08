@@ -1,4 +1,1 @@
-console.log('start')
-setTimeout(function () {
-  console.log('end')
-}, 10000)
+console.log('running')

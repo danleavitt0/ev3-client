@@ -8,10 +8,12 @@ var cors = require('cors')
 var path = require('path')
 var livereload = require('express-livereload')
 var spawn = require('child_process').spawn
-var app = express()
 var MoveSteering = require('move-steering')
 var devices = require('ev3-js-devices')
+var moment = require('moment')
+
 var node = createNode()
+var app = express()
 
 var ports = ['a', 'b', 'c', 'd', 1, 2, 3, 4]
 
@@ -19,11 +21,16 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use('/static', express.static(__dirname + '/public'))
 
-app.post('/file.edit/:name', function (req, res) {
+app.post('/file.get/:name', function (req, res) {
   fs.readFile(__dirname + '/files/' + req.params.name, 'utf-8', function (err, data) {
     if (err)  return res.send('var MoveSteering = require(\'move-steering\')')
     res.send(data)
   })
+})
+
+app.post('/log.get', function (req,res) {
+  var file = fs.readFileSync('log.txt', 'utf-8')
+  res.json({ok: true, data: file})
 })
 
 app.post('/file.save', function (req, res) {
@@ -129,11 +136,12 @@ app.get('*', function (req, res) {
 function createNode () {
   var n = spawn('node', ['run.js'])
   n.stdout.setEncoding('utf-8')
+  n.stderr.setEncoding('utf-8')
   n.stdout.on('data', function (data) {
-    console.log('output:', data)
+    fs.appendFileSync('log.txt', data)
   })
   n.stderr.on('data', function (data) {
-    console.log('There was an error: ' + data)
+    fs.appendFileSync('log.txt', '@@@\n')
   })
   return n
 }

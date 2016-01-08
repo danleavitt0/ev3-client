@@ -7,6 +7,7 @@ const IS_SAVING = 'IS_SAVING'
 const FINISH_SERVER = 'FINISH_SERVER'
 const IS_LOADING = 'IS_LOADING'
 const IS_RUNNING = 'IS_RUNNING'
+const SAVE_LOG = 'SAVE_LOG'
 
 function startRun (file) {
 	return [
@@ -97,16 +98,31 @@ function setNewUrl (url) {
 	return setUrl(url)
 }
 
+function getLog () {
+	return bind(fetch('/log.get', {
+			method: 'POST'
+		}), saveLog, err => console.warn(err))
+}
+
+function saveLog (data) {
+	return {
+		type: SAVE_LOG,
+		payload: data
+	}
+}
+
 export {
 	LOAD_FILE,
 	IS_SAVING,
 	FINISH_SERVER,
 	IS_LOADING,
 	IS_RUNNING,
+	SAVE_LOG,
 
 	fetchFile,
 	startSave,
 	setNewUrl,
 	startRun,
-	stop
+	stop,
+	getLog
 }

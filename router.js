@@ -31,6 +31,7 @@ function editor (params, props) {
     file={props.file}
     message={props.state.saveMessage}
     sensors={props.sensors}
+    log={props.state.log}
     {...props} />
 }
 

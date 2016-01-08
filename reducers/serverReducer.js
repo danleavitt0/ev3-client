@@ -1,4 +1,4 @@
-import {LOAD_FILE, IS_SAVING, FINISH_SERVER, IS_LOADING, IS_RUNNING} from '../actions/actions'
+import {LOAD_FILE, IS_SAVING, FINISH_SERVER, IS_LOADING, IS_RUNNING, SAVE_LOG} from '../actions/actions'
 import {URL_DID_CHANGE} from '../actions/initialize'
 
 
@@ -38,6 +38,11 @@ function reducer (state={}, action) {
 				saving: false,
 				running: false,
 				saveMessage: action.payload.message
+			}
+		case SAVE_LOG:
+			return {
+				...state,
+				log: action.payload
 			}
 	}
 	return state
