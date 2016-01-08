@@ -901,7 +901,8 @@ var styles = {
 	right: {
 		flex: 1,
 		height: '100%',
-		overflow: 'scroll'
+		overflow: 'scroll',
+		overflowX: 'hidden'
 	}
 };
 
@@ -1038,7 +1039,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 require('brace/mode/javascript');
-require('brace/theme/monokai');
+require('brace/theme/tomorrow_night');
 
 var styles = {
 	buttonContainer: {
@@ -1075,7 +1076,7 @@ var Editor = (function (_Component) {
 	_createClass(Editor, [{
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(nextProps) {
-			if (nextProps.message) {
+			if (nextProps.message && nextProps.message !== this.props.message) {
 				this.refs.message.show();
 			}
 			return this.setState({
@@ -1145,7 +1146,7 @@ var Editor = (function (_Component) {
 					left: _react2.default.createElement(_reactAce2.default, {
 						style: { position: 'fixed' },
 						mode: 'javascript',
-						theme: 'monokai',
+						theme: 'tomorrow_night',
 						name: 'brace-editor',
 						onChange: this.onChange.bind(this),
 						value: this.state.text,
@@ -1168,7 +1169,7 @@ var Editor = (function (_Component) {
 
 exports.default = Editor;
 
-},{"../../actions/actions":1,"../components/button":6,"../components/nav":7,"../components/sensorReadOut":10,"../layouts/split":12,"brace":32,"brace/mode/javascript":33,"brace/theme/monokai":35,"material-ui/lib":89,"react":395,"react-ace":219}],15:[function(require,module,exports){
+},{"../../actions/actions":1,"../components/button":6,"../components/nav":7,"../components/sensorReadOut":10,"../layouts/split":12,"brace":32,"brace/mode/javascript":33,"brace/theme/tomorrow_night":35,"material-ui/lib":89,"react":395,"react-ace":219}],15:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -21437,107 +21438,110 @@ function get_blob() {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],35:[function(require,module,exports){
-ace.define("ace/theme/monokai",["require","exports","module","ace/lib/dom"], function(acequire, exports, module) {
+ace.define("ace/theme/tomorrow_night",["require","exports","module","ace/lib/dom"], function(acequire, exports, module) {
 
 exports.isDark = true;
-exports.cssClass = "ace-monokai";
-exports.cssText = ".ace-monokai .ace_gutter {\
-background: #2F3129;\
-color: #8F908A\
+exports.cssClass = "ace-tomorrow-night";
+exports.cssText = ".ace-tomorrow-night .ace_gutter {\
+background: #25282c;\
+color: #C5C8C6\
 }\
-.ace-monokai .ace_print-margin {\
+.ace-tomorrow-night .ace_print-margin {\
 width: 1px;\
-background: #555651\
+background: #25282c\
 }\
-.ace-monokai {\
-background-color: #272822;\
-color: #F8F8F2\
+.ace-tomorrow-night {\
+background-color: #1D1F21;\
+color: #C5C8C6\
 }\
-.ace-monokai .ace_cursor {\
-color: #F8F8F0\
+.ace-tomorrow-night .ace_cursor {\
+color: #AEAFAD\
 }\
-.ace-monokai .ace_marker-layer .ace_selection {\
-background: #49483E\
+.ace-tomorrow-night .ace_marker-layer .ace_selection {\
+background: #373B41\
 }\
-.ace-monokai.ace_multiselect .ace_selection.ace_start {\
-box-shadow: 0 0 3px 0px #272822;\
+.ace-tomorrow-night.ace_multiselect .ace_selection.ace_start {\
+box-shadow: 0 0 3px 0px #1D1F21;\
 border-radius: 2px\
 }\
-.ace-monokai .ace_marker-layer .ace_step {\
+.ace-tomorrow-night .ace_marker-layer .ace_step {\
 background: rgb(102, 82, 0)\
 }\
-.ace-monokai .ace_marker-layer .ace_bracket {\
+.ace-tomorrow-night .ace_marker-layer .ace_bracket {\
 margin: -1px 0 0 -1px;\
-border: 1px solid #49483E\
+border: 1px solid #4B4E55\
 }\
-.ace-monokai .ace_marker-layer .ace_active-line {\
-background: #202020\
+.ace-tomorrow-night .ace_marker-layer .ace_active-line {\
+background: #282A2E\
 }\
-.ace-monokai .ace_gutter-active-line {\
-background-color: #272727\
+.ace-tomorrow-night .ace_gutter-active-line {\
+background-color: #282A2E\
 }\
-.ace-monokai .ace_marker-layer .ace_selected-word {\
-border: 1px solid #49483E\
+.ace-tomorrow-night .ace_marker-layer .ace_selected-word {\
+border: 1px solid #373B41\
 }\
-.ace-monokai .ace_invisible {\
-color: #52524d\
+.ace-tomorrow-night .ace_invisible {\
+color: #4B4E55\
 }\
-.ace-monokai .ace_entity.ace_name.ace_tag,\
-.ace-monokai .ace_keyword,\
-.ace-monokai .ace_meta.ace_tag,\
-.ace-monokai .ace_storage {\
-color: #F92672\
+.ace-tomorrow-night .ace_keyword,\
+.ace-tomorrow-night .ace_meta,\
+.ace-tomorrow-night .ace_storage,\
+.ace-tomorrow-night .ace_storage.ace_type,\
+.ace-tomorrow-night .ace_support.ace_type {\
+color: #B294BB\
 }\
-.ace-monokai .ace_punctuation,\
-.ace-monokai .ace_punctuation.ace_tag {\
-color: #fff\
+.ace-tomorrow-night .ace_keyword.ace_operator {\
+color: #8ABEB7\
 }\
-.ace-monokai .ace_constant.ace_character,\
-.ace-monokai .ace_constant.ace_language,\
-.ace-monokai .ace_constant.ace_numeric,\
-.ace-monokai .ace_constant.ace_other {\
-color: #AE81FF\
+.ace-tomorrow-night .ace_constant.ace_character,\
+.ace-tomorrow-night .ace_constant.ace_language,\
+.ace-tomorrow-night .ace_constant.ace_numeric,\
+.ace-tomorrow-night .ace_keyword.ace_other.ace_unit,\
+.ace-tomorrow-night .ace_support.ace_constant,\
+.ace-tomorrow-night .ace_variable.ace_parameter {\
+color: #DE935F\
 }\
-.ace-monokai .ace_invalid {\
-color: #F8F8F0;\
-background-color: #F92672\
+.ace-tomorrow-night .ace_constant.ace_other {\
+color: #CED1CF\
 }\
-.ace-monokai .ace_invalid.ace_deprecated {\
-color: #F8F8F0;\
-background-color: #AE81FF\
+.ace-tomorrow-night .ace_invalid {\
+color: #CED2CF;\
+background-color: #DF5F5F\
 }\
-.ace-monokai .ace_support.ace_constant,\
-.ace-monokai .ace_support.ace_function {\
-color: #66D9EF\
+.ace-tomorrow-night .ace_invalid.ace_deprecated {\
+color: #CED2CF;\
+background-color: #B798BF\
 }\
-.ace-monokai .ace_fold {\
-background-color: #A6E22E;\
-border-color: #F8F8F2\
+.ace-tomorrow-night .ace_fold {\
+background-color: #81A2BE;\
+border-color: #C5C8C6\
 }\
-.ace-monokai .ace_storage.ace_type,\
-.ace-monokai .ace_support.ace_class,\
-.ace-monokai .ace_support.ace_type {\
-font-style: italic;\
-color: #66D9EF\
+.ace-tomorrow-night .ace_entity.ace_name.ace_function,\
+.ace-tomorrow-night .ace_support.ace_function,\
+.ace-tomorrow-night .ace_variable {\
+color: #81A2BE\
 }\
-.ace-monokai .ace_entity.ace_name.ace_function,\
-.ace-monokai .ace_entity.ace_other,\
-.ace-monokai .ace_entity.ace_other.ace_attribute-name,\
-.ace-monokai .ace_variable {\
-color: #A6E22E\
+.ace-tomorrow-night .ace_support.ace_class,\
+.ace-tomorrow-night .ace_support.ace_type {\
+color: #F0C674\
 }\
-.ace-monokai .ace_variable.ace_parameter {\
-font-style: italic;\
-color: #FD971F\
+.ace-tomorrow-night .ace_heading,\
+.ace-tomorrow-night .ace_markup.ace_heading,\
+.ace-tomorrow-night .ace_string {\
+color: #B5BD68\
 }\
-.ace-monokai .ace_string {\
-color: #E6DB74\
+.ace-tomorrow-night .ace_entity.ace_name.ace_tag,\
+.ace-tomorrow-night .ace_entity.ace_other.ace_attribute-name,\
+.ace-tomorrow-night .ace_meta.ace_tag,\
+.ace-tomorrow-night .ace_string.ace_regexp,\
+.ace-tomorrow-night .ace_variable {\
+color: #CC6666\
 }\
-.ace-monokai .ace_comment {\
-color: #75715E\
+.ace-tomorrow-night .ace_comment {\
+color: #969896\
 }\
-.ace-monokai .ace_indent-guide {\
-background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWPQ0FD0ZXBzd/wPAAjVAoxeSgNeAAAAAElFTkSuQmCC) right repeat-y\
+.ace-tomorrow-night .ace_indent-guide {\
+background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHB3d/8PAAOIAdULw8qMAAAAAElFTkSuQmCC) right repeat-y\
 }";
 
 var dom = acequire("../lib/dom");

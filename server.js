@@ -40,7 +40,11 @@ app.post('/file.save', function (req, res) {
 
 app.post('/file.stop', function (req, res) {
   node.kill('SIGINT')
-  MoveSteering().stop()
+  try {
+    MoveSteering().stop()
+  } catch (e) {
+    console.warn('no motors attached')
+  }
   node = createNode()
   res.json({
     ok: true,
