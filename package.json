@@ -18,9 +18,11 @@
   },
   "homepage": "https://github.com/danleavitt0/ev3#readme",
   "dependencies": {
+    "@f/equal-obj": "^1.2.1",
     "async-eval": "^0.1.5",
     "body-parser": "^1.14.1",
     "brace": "^0.5.1",
+    "bufferutil": "^1.2.1",
     "color-sensor": "^0.1.6",
     "cors": "^2.7.1",
     "enroute": "^1.0.1",
@@ -39,8 +41,12 @@
     "react": "^0.14.3",
     "react-ace": "^2.6.0",
     "react-ace-wrapper": "^1.0.1",
+    "react-dom": "^0.14.6",
+    "socket.io": "^1.4.3",
+    "socket.io-client": "^1.4.0",
     "touch-sensor": "^0.1.7",
-    "ultrasonic-sensor": "^0.1.4"
+    "ultrasonic-sensor": "^0.1.4",
+    "utf-8-validate": "^1.2.1"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.1.18",

@@ -8,6 +8,9 @@ import logger from 'redux-logger'
 import fetch from 'redux-effects-fetch'
 import sensorData from './middleware/sensorData'
 import getFile from './middleware/getFile'
+import socketConnection from './middleware/socketConnection'
+import io from 'socket.io-client'
+let socket = io('http://localhost:3000', {multiplex: false})
 
 const middlewares = [
 	multi,
@@ -15,7 +18,8 @@ const middlewares = [
   fetch,
   events(),
   location(),
-  getFile
+  getFile,
+  socketConnection(socket)
 ]
 
 export default initialState => applyMiddleware(...middlewares)(createStore)(reducer, initialState)
