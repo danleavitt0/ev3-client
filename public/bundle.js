@@ -801,8 +801,7 @@ var styles = {
 		flex: 1,
 		margin: '0 10px',
 		textTransform: 'capitalize'
-	},
-	widget: {}
+	}
 };
 
 var Sensor = (function (_Component) {
@@ -817,7 +816,7 @@ var Sensor = (function (_Component) {
 	_createClass(Sensor, [{
 		key: 'render',
 		value: function render() {
-			var widget = this.props.running ? component(this.props.type || '*', this.props) : _react2.default.createElement('div', null);
+			var widget = this.props.running ? _react2.default.createElement('div', null) : component(this.props.type || '*', this.props);
 			return _react2.default.createElement(
 				'div',
 				{ style: styles.container },
