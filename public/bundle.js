@@ -817,7 +817,7 @@ var Sensor = (function (_Component) {
 	_createClass(Sensor, [{
 		key: 'render',
 		value: function render() {
-			var widget = component(this.props.type || '*', this.props);
+			var widget = this.props.running ? component(this.props.type || '*', this.props) : _react2.default.createElement('div', null);
 			return _react2.default.createElement(
 				'div',
 				{ style: styles.container },
@@ -933,7 +933,8 @@ var SensorReadOut = (function (_Component) {
 					path: sensors[key].path,
 					type: sensors[key].type,
 					value: sensors[key].value,
-					mode: sensors[key].mode }));
+					mode: sensors[key].mode,
+					running: this.props.running }));
 			}
 			return _react2.default.createElement(
 				'div',
@@ -1303,7 +1304,8 @@ var Editor = (function (_Component) {
 					right: _react2.default.createElement(_sensorReadOut2.default, {
 						log: this.props.log,
 						sensors: this.props.sensors,
-						dispatch: this.props.dispatch })
+						dispatch: this.props.dispatch,
+						running: this.state.running })
 				}),
 				_react2.default.createElement(_lib.Snackbar, {
 					style: styles.font,

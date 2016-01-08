@@ -27,7 +27,7 @@
     "cors": "^2.7.1",
     "enroute": "^1.0.1",
     "ev3-js-color-sensor": "^0.1.5",
-    "ev3-js-devices": "^0.4.13",
+    "ev3-js-devices": "^0.5.1",
     "ev3-js-ir-sensor": "^0.1.9",
     "ev3-js-motor": "^0.5.17",
     "ev3-js-touch-sensor": "^0.1.6",
