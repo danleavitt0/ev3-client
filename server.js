@@ -13,7 +13,6 @@ var devices = require('ev3-js-devices')
 var moment = require('moment')
 var app = express()
 var http = require('http').Server(app)
-var io = require('socket.io')(http)
 
 var ports = ['a', 'b', 'c', 'd', 1, 2, 3, 4]
 
@@ -137,12 +136,9 @@ function createNode () {
   n.stderr.setEncoding('utf-8')
   n.stdout.on('data', function (data) {
     fs.appendFileSync('log.txt', data)
-    if (data.match(/@@@/gi))
-      io.emit('action', {type: 'FINISH_SERVER', payload: {message: 'Run finished'}})
   })
   n.stderr.on('data', function (data) {
     fs.appendFileSync('log.txt', '@@@\n')
-    io.emit('action', {type: 'FINISH_SERVER', payload: {message: 'Error: check the console'}})
   })
   return n
 }
