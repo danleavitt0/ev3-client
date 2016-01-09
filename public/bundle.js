@@ -59,10 +59,8 @@ function fetchFile(url) {
 }
 
 function stop() {
-	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/file.stop', {
+	return (0, _reduxEffectsFetch.fetch)('/file.stop', {
 		method: 'POST'
-	}), finishServer, function (err) {
-		return console.warn(err);
 	});
 }
 

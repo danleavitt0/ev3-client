@@ -54,10 +54,8 @@ app.post('/file.stop', function (req, res) {
   } catch (e) {
     console.warn('no motors attached')
   }
-  node = createNode()
   res.json({
-    ok: true,
-    message: 'Run stopped'
+    ok: true
   })
 })
 
@@ -144,6 +142,7 @@ function createNode (file) {
     fs.appendFileSync('log.txt', data)
   })
   n.stderr.on('data', function (data) {
+    console.log(data)
     var split = data.split('\n\n')
     var trace = parsetrace({stack: split[1]}).object()
     var err = [

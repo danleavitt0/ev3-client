@@ -50,9 +50,9 @@ function fetchFile (url) {
 }
 
 function stop () {
-	return bind(fetch('/file.stop', {
+	return fetch('/file.stop', {
 		method: 'POST',
-	}), finishServer, (err) => console.warn(err))
+	})
 }
 
 function startRunning () {

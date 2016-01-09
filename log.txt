@@ -40,3 +40,35 @@ Error: va is not defined
 example.js
 Line: 2
 
+start
+done
+start
+done
+start
+Error: Cannot find module '/Users/9dots/Repositories/ev3/undefined'
+
+Line: 337
+
+start
+Error: Cannot find module '/Users/9dots/Repositories/ev3/undefined'
+
+Line: 337
+
+start
+Error: Cannot find module '/Users/9dots/Repositories/ev3/undefined'
+
+Line: 337
+
+start
+Error: Cannot find module '/Users/9dots/Repositories/ev3/undefined'
+
+Line: 337
+
+start
+Error: Cannot find module '/Users/9dots/Repositories/ev3/undefined'
+
+Line: 337
+
+start
+start
+start
