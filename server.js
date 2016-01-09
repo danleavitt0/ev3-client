@@ -13,6 +13,7 @@ var devices = require('ev3-js-devices')
 var moment = require('moment')
 var app = express()
 var http = require('http').Server(app)
+var parsetrace = require('parsetrace')
 
 var ports = ['a', 'b', 'c', 'd', 1, 2, 3, 4]
 
@@ -143,7 +144,16 @@ function createNode (file) {
     fs.appendFileSync('log.txt', data)
   })
   n.stderr.on('data', function (data) {
-    fs.appendFileSync('log.txt', '@@@\n')
+    var split = data.split('\n\n')
+    var trace = parsetrace({stack: split[1]}).object()
+    var err = [
+      'Error: ' + trace.error,
+      trace.frames[0].file.slice((__dirname + '/files/').length),
+      'Line: ' + trace.frames[0].line,
+      '\n'
+    ].join('\n')
+    // console.log(err)
+    fs.appendFileSync('log.txt', err)
   })
   return n
 }

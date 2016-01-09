@@ -1,40 +1,42 @@
-Started at January 8th 2016, 1:35:56 pm
-@@@
-Started at January 8th 2016, 1:36:02 pm
-@@@
-Started at January 8th 2016, 1:36:21 pm
-@@@
-Started at January 8th 2016, 1:36:24 pm
-@@@
-Started at January 8th 2016, 1:36:30 pm
-[ReferenceError: va is not defined] '@@@'
-Started at January 8th 2016, 1:36:33 pm
-[ReferenceError: va is not defined] '@@@'
-Started at January 8th 2016, 1:37:20 pm
-[ReferenceError: va is not defined] '\n@@@'
-Started at January 8th 2016, 1:37:23 pm
-[ReferenceError: va is not defined] '\n@@@'
-Started at January 8th 2016, 1:37:52 pm
-[ReferenceError: va is not defined]
-@@@
-Started at January 8th 2016, 1:37:55 pm
-[ReferenceError: va is not defined]
-@@@
-Started at January 8th 2016, 1:45:07 pm
-[ReferenceError: va is not defined]
-@@@
-@@@
-@@@
-run
-@@@
-run
-@@@
-run
-@@@
-run
-@@@
-run
-run
-run
-run
-run
+va is not defined,/Users/9dots/Repositories/ev3/files/example.js,2Cannot find module '/Users/9dots/Repositories/ev3/undefined',module.js,337va is not defined,/Users/9dots/Repositories/ev3/files/example.js,2va is not defined
+/Users/9dots/Repositories/ev3/files/example.js
+2va is not defined
+/Users/9dots/Repositories/ev3/files/example.js
+2va is not defined
+/Users/9dots/Repositories/ev3/files/example.js
+2Error: va is not defined
+/Users/9dots/Repositories/ev3/files/example.js
+2
+
+Error: va is not defined
+/Users/9dots/Repositories/ev3/files/example.js
+2
+
+Error: va is not defined
+/Users/9dots/Repositories/ev3/files/example.js
+2
+
+Error: va is not defined
+/Users/9dots/Repositories/ev3/files/example.js
+2
+
+Error: va is not defined
+/Users/9dots/Repositories/ev3/files/example.js
+Line: 2
+
+Error: va is not defined
+/Users/9dots/Repositories/ev3/files/example.js
+Line: 2
+
+Error: va is not defined
+/Users/9dots/Repositories/ev3/files/example.js
+Line: 2
+
+Error: va is not defined
+/files/example.js
+Line: 2
+
+Error: va is not defined
+example.js
+Line: 2
+
