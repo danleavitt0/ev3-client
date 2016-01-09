@@ -20,7 +20,7 @@ function startRun (file) {
 			body: JSON.stringify({
 				fileName: file
 			})
-		}), (res) => console.log(JSON.stringify(res))),
+		}), finishServer, () => console.warn(err)),
 		startRunning()
 	]
 }

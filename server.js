@@ -20,7 +20,8 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use('/static', express.static(__dirname + '/public'))
 
-var node = createNode()
+var node
+
 app.post('/file.get/:name', function (req, res) {
   fs.readFile(__dirname + '/files/' + req.params.name, 'utf-8', function (err, data) {
     if (err)  return res.send('var MoveSteering = require(\'move-steering\')')
@@ -46,7 +47,7 @@ app.post('/file.save', function (req, res) {
 })
 
 app.post('/file.stop', function (req, res) {
-  node.kill('SIGINT')
+  node.kill()
   try {
     MoveSteering().reset()
   } catch (e) {
@@ -61,8 +62,13 @@ app.post('/file.stop', function (req, res) {
 
 app.post('/file.run', function (req, res) {
   var file = __dirname + '/files/' + req.body.fileName
-  node.stdin.write(file)
-  res.json({ok: true})
+  if (node) {
+    node.kill()
+  }
+  node = createNode(file)
+  node.on('exit', function () {
+    res.json({ok: true, message: 'Run finished'})
+  })
 })
 
 app.post('/file.getAll', function (req, res) {
@@ -129,8 +135,8 @@ app.post('/sensors.find', function (req, res) {
   })
 })
 
-function createNode () {
-  var n = spawn('node', ['run.js'])
+function createNode (file) {
+  var n = spawn('node', [file])
   n.stdout.setEncoding('utf-8')
   n.stderr.setEncoding('utf-8')
   n.stdout.on('data', function (data) {

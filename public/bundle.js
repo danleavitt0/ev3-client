@@ -29,8 +29,8 @@ function startRun(file) {
 		body: JSON.stringify({
 			fileName: file
 		})
-	}), function (res) {
-		return console.log(JSON.stringify(res));
+	}), finishServer, function () {
+		return console.warn(err);
 	}), startRunning()];
 }
 
