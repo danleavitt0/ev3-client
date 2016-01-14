@@ -42,7 +42,7 @@ app.post('/log.get', function (req,res) {
 
 app.post('/file.save', function (req, res) {
   try {
-    fs.accessSync(__dirname + '/files/' + req.body.name)
+    fs.accessSync(__dirname + '/files/')
   } catch (e) {
     fs.mkdirSync(__dirname + '/files/')
   }
