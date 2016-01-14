@@ -21,6 +21,8 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use('/static', express.static(__dirname + '/public'))
 
+console.log(process.pid)
+
 var node
 
 app.post('/file.get/:name', function (req, res) {
@@ -134,6 +136,21 @@ app.post('/sensors.find', function (req, res) {
   })
 })
 
+app.post('/source.update', function (req, res) {
+  var update = spawn('git', ['pull'])
+  update.stderr.setEncoding('utf-8')
+  update.stdout.setEncoding('utf-8')
+  update.stderr.on('data', function(data) {
+    console.log('error', data)
+  })
+  update.stdout.on('data', function(data) {
+    console.log('message', data)
+  })
+  update.on('exit', function (msg) {
+    res.json({ ok: true, message: 'Pull finished' })
+  })
+})
+
 function createNode (file) {
   var n = spawn('node', [file])
   n.stdout.setEncoding('utf-8')
@@ -142,7 +159,6 @@ function createNode (file) {
     fs.appendFileSync('log.txt', data)
   })
   n.stderr.on('data', function (data) {
-    console.log(data)
     var split = data.split('\n\n')
     var trace = parsetrace({stack: split[1]}).object()
     var err = [
@@ -151,7 +167,6 @@ function createNode (file) {
       'Line: ' + trace.frames[0].line,
       '\n'
     ].join('\n')
-    // console.log(err)
     fs.appendFileSync('log.txt', err)
   })
   return n

@@ -94,6 +94,12 @@ function loadFile (file) {
 	}
 }
 
+function startPull () {
+	return fetch('/source.update', {
+		method: 'POST'
+	})
+}
+
 function setNewUrl (url) {
 	return setUrl(url)
 }
@@ -124,5 +130,6 @@ export {
 	setNewUrl,
 	startRun,
 	stop,
-	getLog
+	getLog,
+	startPull
 }

@@ -1,4 +1,5 @@
-console.log('start')
-setTimeout(function () {
-  console.log('done')
-},3000)
+var example = {
+  id: 'blah'
+}
+
+example.time()

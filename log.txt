@@ -72,3 +72,60 @@ Line: 337
 start
 start
 start
+start
+start
+start
+start
+start
+start
+start
+start
+start
+start
+start
+done
+start
+done
+start
+start
+start
+start
+start
+start
+start
+Error: missing ) after argument list
+
+Line: 53
+
+Error: document is not defined
+example.js
+Line: 1
+
+Error: Number.deplet is not a function
+example.js
+Line: 1
+
+Error: Number.deplet is not a function
+example.js
+Line: 1
+
+Error: Number(...).dep is not a function
+example.js
+Line: 1
+
+Error: d.split is not a function
+example.js
+Line: 7
+
+Error: Cannot read property 'time' of undefined
+example.js
+Line: 5
+
+Error: (intermediate value).time is not a function
+example.js
+Line: 5
+
+Error: example.time is not a function
+example.js
+Line: 5
+

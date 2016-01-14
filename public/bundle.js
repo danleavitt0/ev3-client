@@ -4,7 +4,7 @@
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.getLog = exports.stop = exports.startRun = exports.setNewUrl = exports.startSave = exports.fetchFile = exports.SAVE_LOG = exports.IS_RUNNING = exports.IS_LOADING = exports.FINISH_SERVER = exports.IS_SAVING = exports.LOAD_FILE = undefined;
+exports.startPull = exports.getLog = exports.stop = exports.startRun = exports.setNewUrl = exports.startSave = exports.fetchFile = exports.SAVE_LOG = exports.IS_RUNNING = exports.IS_LOADING = exports.FINISH_SERVER = exports.IS_SAVING = exports.LOAD_FILE = undefined;
 
 var _reduxEffectsLocation = require('redux-effects-location');
 
@@ -100,6 +100,12 @@ function loadFile(file) {
 	};
 }
 
+function startPull() {
+	return (0, _reduxEffectsFetch.fetch)('/source.update', {
+		method: 'POST'
+	});
+}
+
 function setNewUrl(url) {
 	return (0, _reduxEffectsLocation.setUrl)(url);
 }
@@ -131,6 +137,7 @@ exports.setNewUrl = setNewUrl;
 exports.startRun = startRun;
 exports.stop = stop;
 exports.getLog = getLog;
+exports.startPull = startPull;
 
 },{"redux-effects":406,"redux-effects-fetch":400,"redux-effects-location":403}],2:[function(require,module,exports){
 'use strict';
@@ -1414,6 +1421,11 @@ var Home = (function (_Component) {
       });
     }
   }, {
+    key: 'pullButtonClick',
+    value: function pullButtonClick() {
+      this.props.dispatch((0, _actions.startPull)());
+    }
+  }, {
     key: '_onDialogCancel',
     value: function _onDialogCancel() {
       this.setState({
@@ -1435,6 +1447,7 @@ var Home = (function (_Component) {
       return _react2.default.createElement(
         _main2.default,
         { nav: _react2.default.createElement(_nav2.default, { title: 'EV3.js', iconRight: _react2.default.createElement(_lib.FlatButton, { onClick: this.createFile.bind(this), label: 'Create' }) }) },
+        _react2.default.createElement(_lib.FlatButton, { onClick: this.pullButtonClick.bind(this), label: 'Pull Updates' }),
         _react2.default.createElement(
           'div',
           { style: style.cardList },
