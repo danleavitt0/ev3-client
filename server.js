@@ -32,7 +32,7 @@ app.post('/file.get/:name', function (req, res) {
 
 app.post('/log.get', function (req,res) {
   try {
-    fs.accessSync(__dirname + '/log.txt')
+    fs.existsSync(__dirname + '/log.txt')
   } catch (e) {
     fs.writeFileSync(__dirname + '/log.txt', '')
   }
@@ -42,7 +42,7 @@ app.post('/log.get', function (req,res) {
 
 app.post('/file.save', function (req, res) {
   try {
-    fs.accessSync(__dirname + '/files/')
+    fs.existsSync(__dirname + '/files/')
   } catch (e) {
     fs.mkdirSync(__dirname + '/files/')
   }
