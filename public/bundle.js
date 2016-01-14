@@ -1440,9 +1440,13 @@ var Home = (function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var projects = this.state.projects ? this.state.projects.map(function (project, i) {
+      var projects = this.state.projects && this.state.projects.length > 0 ? this.state.projects.map(function (project, i) {
         return _react2.default.createElement(_project2.default, { name: project, key: 'project-' + i });
-      }) : null;
+      }) : _react2.default.createElement(
+        _lib.ListItem,
+        null,
+        'No projects found'
+      );
       var standardActions = [{ text: 'Cancel', onTouchTap: this._onDialogCancel.bind(this) }, { text: 'Submit', onTouchTap: this._onDialogSubmit.bind(this), ref: 'submit' }];
       return _react2.default.createElement(
         _main2.default,

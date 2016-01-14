@@ -13,7 +13,7 @@ use the ev3 color sensor
 ## Usage
 
 ```js
-var ColorSensor = require('ev3-js-color-sensor')
+var ColorSensor = require('color-sensor')
 ColorSensor(1).reflected // => 88
 ColorSensor(1).color // => 7
 ```

@@ -21,8 +21,6 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use('/static', express.static(__dirname + '/public'))
 
-console.log(process.pid)
-
 var node
 
 app.post('/file.get/:name', function (req, res) {
@@ -38,6 +36,11 @@ app.post('/log.get', function (req,res) {
 })
 
 app.post('/file.save', function (req, res) {
+  try {
+    fs.accessSync(__dirname + '/files/' + req.body.name)
+  } catch (e) {
+    fs.mkdirSync(__dirname + '/files/')
+  }
   fs.writeFile(
     __dirname + '/files/' + req.body.name,
     req.body.text,
@@ -75,7 +78,7 @@ app.post('/file.run', function (req, res) {
 app.post('/file.getAll', function (req, res) {
   fs.readdir(__dirname + '/files', function (err, data) {
     if (err) {
-      console.warn(err)
+      res.send({text: ''})
     }
     res.send(JSON.stringify(data))
   })

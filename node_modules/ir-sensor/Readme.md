@@ -13,7 +13,7 @@ get values from ev3 ir-sensor
 ## Usage
 
 ```js
-var IRSensor = require('ev3-js-ir-sensor')
+var IRSensor = require('ir-sensor')
 IRSensor(3).proximity // => 50
 IRSensor(3).beacon(2) // => { heading: 0, distance: 100 }
 IRSensor(3).remote(3) // => 1
