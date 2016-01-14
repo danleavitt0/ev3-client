@@ -31,8 +31,13 @@ app.post('/file.get/:name', function (req, res) {
 })
 
 app.post('/log.get', function (req,res) {
+  try {
+    fs.accessSync(__dirname + 'log.txt')
+  } catch (e) {
+    fs.writeFileSync(__dirname + 'log.txt')
+  }
   var file = fs.readFileSync('log.txt', 'utf-8')
-  res.json({ok: true, data: file})
+  res.json({ ok: true, data: file })
 })
 
 app.post('/file.save', function (req, res) {
