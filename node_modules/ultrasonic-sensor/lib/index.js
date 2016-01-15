@@ -20,11 +20,7 @@ function USSensor (port) {
   if (!(this instanceof USSensor)) {
     return new USSensor(port)
   }
-  try {
-    Device.call(this, devices(port))
-  } catch (e) {
-    throw new Error(`No ultrasonic sensor in port ${port}`)
-  }
+  Device.call(this, devices(port))
 }
 
 inherit(USSensor, Device)

@@ -20,11 +20,7 @@ function IRSensor (port) {
   if (!(this instanceof IRSensor)) {
     return new IRSensor(port)
   }
-  try {
-    Device.call(this, devices(port))
-  } catch (e) {
-    throw new Error('IR sensor not found')
-  }
+  Device.call(this, devices(port))
 }
 
 inherit(IRSensor, Device)

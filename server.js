@@ -157,7 +157,7 @@ app.post('/source.update', function (req, res) {
 })
 
 function createNode (file) {
-  var n = cluster.run(file)
+  var n = spawn('node', [file])
   n.stdout.setEncoding('utf-8')
   n.stderr.setEncoding('utf-8')
   n.stdout.on('data', function (data) {

@@ -20,11 +20,7 @@ function TouchSensor (port) {
   if (!(this instanceof TouchSensor)) {
     return new TouchSensor(port)
   }
-  try {
-    Device.call(this, devices(port))
-  } catch (e) {
-    throw new Error(`No touch sensor in port ${port}`)
-  }
+  Device.call(this, devices(port))
 }
 
 inherit(TouchSensor, Device)
