@@ -31,9 +31,7 @@ app.post('/file.get/:name', function (req, res) {
 })
 
 app.post('/log.get', function (req,res) {
-  try {
-    fs.existsSync(__dirname + '/log.txt')
-  } catch (e) {
+  if (!fs.existsSync(__dirname + '/log.txt')) {
     fs.writeFileSync(__dirname + '/log.txt', '')
   }
   var file = fs.readFileSync('log.txt', 'utf-8')
@@ -41,9 +39,7 @@ app.post('/log.get', function (req,res) {
 })
 
 app.post('/file.save', function (req, res) {
-  try {
-    fs.existsSync(__dirname + '/files/')
-  } catch (e) {
+  if (!fs.existsSync(__dirname + '/files/')) {
     fs.mkdirSync(__dirname + '/files/')
   }
   fs.writeFile(
