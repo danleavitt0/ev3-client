@@ -14,6 +14,7 @@ var moment = require('moment')
 var app = express()
 var http = require('http').Server(app)
 var parsetrace = require('parsetrace')
+var cluster = require('./cluster')
 
 var ports = ['a', 'b', 'c', 'd', 1, 2, 3, 4]
 
@@ -156,7 +157,7 @@ app.post('/source.update', function (req, res) {
 })
 
 function createNode (file) {
-  var n = spawn('node', [file])
+  var n = cluster.run(file)
   n.stdout.setEncoding('utf-8')
   n.stderr.setEncoding('utf-8')
   n.stdout.on('data', function (data) {
@@ -166,9 +167,12 @@ function createNode (file) {
     var split = data.split('\n\n')
     if (split[1]) {
       var trace = parsetrace({stack: split[1]}).object()
+      var errFile = trace.frames[0].file.slice((__dirname + '/files/').length).indexOf('anonymous') > -1 ? 
+        file.slice((__dirname + '/files/').length) :
+        trace.frames[0].file.slice((__dirname + '/files/').length)
       var err = [
         'Error: ' + trace.error,
-        trace.frames[0].file.slice((__dirname + '/files/').length),
+        'File: ' + errFile,
         'Line: ' + trace.frames[0].line,
         '\n'
       ].join('\n')
