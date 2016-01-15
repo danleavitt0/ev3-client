@@ -18,7 +18,11 @@ module.exports = ColorSensor['default'] = ColorSensor
  */
 function ColorSensor (port) {
   if (!(this instanceof ColorSensor)) {
-    return new ColorSensor(port)
+    try {
+      return new ColorSensor(port)
+    } catch (e) {
+      throw(`No color sensor found in port ${port}`)
+    }
   }
   Device.call(this, devices(port))
 }

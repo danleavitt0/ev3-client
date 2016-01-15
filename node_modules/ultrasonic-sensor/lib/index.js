@@ -18,7 +18,11 @@ module.exports = USSensor['default'] = USSensor
  */
 function USSensor (port) {
   if (!(this instanceof USSensor)) {
-    return new USSensor(port)
+    try {
+      return new USSensor(port)
+    } catch (e) {
+      throw (`No ultrasonic sensor in port ${port}`)
+    }
   }
   Device.call(this, devices(port))
 }

@@ -28,10 +28,11 @@ MoveSteering().timed(2000, 300, 100) // turn right for 2 seconds
 
 **Returns:** a move steering instance that controls two motors
 
-### .forever(speed, opts)
+### .forever(speed, turn, opts)
 Run both motors until they receive a stop command.
 
 - `speed` - speed at which to run the motors
+- `turn` - number between -100 and 100 to denote amount of turning. -100 is maximum left turn. 0 is straight. 100 is maximum right turn.
 - `opts` - an object of optional parameters
 
 ### .degrees(degrees, speed, turn)

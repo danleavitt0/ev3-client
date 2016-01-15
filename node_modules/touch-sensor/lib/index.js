@@ -18,7 +18,11 @@ module.exports = TouchSensor['default'] = TouchSensor
  */
 function TouchSensor (port) {
   if (!(this instanceof TouchSensor)) {
-    return new TouchSensor(port)
+    try {
+      return new TouchSensor(port)
+    } catch (e) {
+      throw (`No touch sensor in port ${port}`)
+    }
   }
   Device.call(this, devices(port))
 }
