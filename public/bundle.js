@@ -705,6 +705,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var INTERVAL = 1000;
+
 var component = (0, _enroute2.default)({
 	'lego-ev3-l-motor': motor,
 	'lego-ev3-m-motor': motor,
@@ -729,7 +731,8 @@ function motor(params, props) {
 		port: port,
 		dispatch: dispatch,
 		mode: mode,
-		value: value });
+		value: value,
+		interval: INTERVAL });
 }
 
 function color(params, props) {
@@ -745,7 +748,8 @@ function color(params, props) {
 		port: port,
 		dispatch: dispatch,
 		mode: mode,
-		value: value
+		value: value,
+		interval: INTERVAL
 	});
 }
 
@@ -762,7 +766,8 @@ function touch(params, props) {
 		port: port,
 		dispatch: dispatch,
 		mode: mode,
-		value: value
+		value: value,
+		interval: INTERVAL
 	});
 }
 
@@ -779,7 +784,8 @@ function ultrasonic(params, props) {
 		port: port,
 		dispatch: dispatch,
 		mode: mode,
-		value: value
+		value: value,
+		interval: INTERVAL
 	});
 }
 
@@ -1669,7 +1675,7 @@ var ColorSensor = (function (_Component) {
 
 			this.interval = setInterval(function () {
 				return _this2.props.dispatch((0, _sensors.getSensorData)(_this2.props.path, _this2.props.port));
-			}, 500);
+			}, this.props.interval);
 		}
 	}, {
 		key: 'componentWillUnmount',
@@ -1761,7 +1767,7 @@ var Motor = (function (_Component) {
 			clearInterval(this.interval);
 			this.interval = setInterval(function () {
 				return _this2.props.dispatch((0, _sensors.getSensorData)(_this2.props.path, _this2.props.port, item.payload[0]));
-			}, 500);
+			}, this.props.interval);
 		}
 	}, {
 		key: 'componentDidMount',
@@ -1770,7 +1776,7 @@ var Motor = (function (_Component) {
 
 			this.interval = setInterval(function () {
 				return _this3.props.dispatch((0, _sensors.getSensorData)(_this3.props.path, _this3.props.port, 'position'));
-			}, 500);
+			}, this.props.interval);
 		}
 	}, {
 		key: 'componentWillUnmount',
@@ -1911,7 +1917,7 @@ var TouchSensor = (function (_Component) {
 
 			this.interval = setInterval(function () {
 				return _this2.props.dispatch((0, _sensors.getSensorData)(_this2.props.path, _this2.props.port));
-			}, 500);
+			}, this.props.interval);
 		}
 	}, {
 		key: 'componentWillUnmount',
@@ -1998,7 +2004,7 @@ var UltrasonicSensor = (function (_Component) {
 
 			this.interval = setInterval(function () {
 				return _this2.props.dispatch((0, _sensors.getSensorData)(_this2.props.path, _this2.props.port));
-			}, 500);
+			}, this.props.interval);
 		}
 	}, {
 		key: 'componentWillUnmount',
