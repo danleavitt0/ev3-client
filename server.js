@@ -167,9 +167,7 @@ function createNode (file) {
     fs.appendFileSync('log.txt', data)
   })
   n.stderr.on('data', function (data) {
-    console.log('data', data.toString())
     var split = data.split('\n\n')
-    console.log('split', split)
     var trace = parsetrace({stack: split[1]}).object()
     var err = [
       'Error: ' + trace.error,

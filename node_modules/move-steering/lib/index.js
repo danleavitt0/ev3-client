@@ -36,7 +36,7 @@ function MoveSteering (leftPort, rightPort) {
     this.left = new Motor(leftPort || 'b')
     this.right = new Motor(rightPort || 'c')
   } catch (e) {
-    throw('Cannot find motors')
+    throw new Error('Cannot find motors')
   }
 }
 
