@@ -21,7 +21,7 @@ function TouchSensor (port) {
     try {
       return new TouchSensor(port)
     } catch (e) {
-      throw (`No touch sensor in port ${port}`)
+      throw new Error(`No touch sensor in port ${port}`)
     }
   }
   Device.call(this, devices(port))

@@ -21,7 +21,7 @@ function USSensor (port) {
     try {
       return new USSensor(port)
     } catch (e) {
-      throw (`No ultrasonic sensor in port ${port}`)
+      throw new Error(`No ultrasonic sensor in port ${port}`)
     }
   }
   Device.call(this, devices(port))

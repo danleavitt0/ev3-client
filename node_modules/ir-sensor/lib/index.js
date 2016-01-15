@@ -21,7 +21,7 @@ function IRSensor (port) {
     try {
       return new IRSensor(port)
     } catch (e) {
-      throw('IR sensor not found')
+      throw new Error('IR sensor not found')
     }
   }
   Device.call(this, devices(port))

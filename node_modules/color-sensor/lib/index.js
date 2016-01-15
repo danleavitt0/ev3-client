@@ -21,7 +21,7 @@ function ColorSensor (port) {
     try {
       return new ColorSensor(port)
     } catch (e) {
-      throw(`No color sensor found in port ${port}`)
+      throw new Error(`No color sensor found in port ${port}`)
     }
   }
   Device.call(this, devices(port))
