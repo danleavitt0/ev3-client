@@ -164,14 +164,16 @@ function createNode (file) {
   })
   n.stderr.on('data', function (data) {
     var split = data.split('\n\n')
-    var trace = parsetrace({stack: split[1]}).object()
-    var err = [
-      'Error: ' + trace.error,
-      trace.frames[0].file.slice((__dirname + '/files/').length),
-      'Line: ' + trace.frames[0].line,
-      '\n'
-    ].join('\n')
-    fs.appendFileSync('log.txt', err)
+    if (split) {
+      var trace = parsetrace({stack: split[1]}).object()
+      var err = [
+        'Error: ' + trace.error,
+        trace.frames[0].file.slice((__dirname + '/files/').length),
+        'Line: ' + trace.frames[0].line,
+        '\n'
+      ].join('\n')
+      fs.appendFileSync('log.txt', err)
+    }
   })
   return n
 }
