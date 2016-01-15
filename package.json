@@ -23,7 +23,7 @@
     "body-parser": "^1.14.1",
     "brace": "^0.5.1",
     "bufferutil": "^1.2.1",
-    "color-sensor": "^0.1.11",
+    "color-sensor": "^0.1.12",
     "cors": "^2.7.1",
     "enroute": "^1.0.1",
     "ev3-js-color-sensor": "^0.1.5",
@@ -36,7 +36,7 @@
     "forever": "^0.15.1",
     "fs": "0.0.2",
     "ip": "^1.1.0",
-    "ir-sensor": "^0.1.15",
+    "ir-sensor": "^0.1.16",
     "moment": "^2.11.0",
     "move-steering": "^0.1.37",
     "parsetrace": "^0.2.0",
@@ -47,8 +47,8 @@
     "socket.io": "^1.4.3",
     "socket.io-client": "^1.4.0",
     "stack-trace": "0.0.9",
-    "touch-sensor": "^0.1.11",
-    "ultrasonic-sensor": "^0.1.7",
+    "touch-sensor": "^0.1.12",
+    "ultrasonic-sensor": "^0.1.8",
     "utf-8-validate": "^1.2.1"
   },
   "devDependencies": {

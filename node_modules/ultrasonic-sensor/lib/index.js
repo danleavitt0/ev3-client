@@ -18,13 +18,13 @@ module.exports = USSensor['default'] = USSensor
  */
 function USSensor (port) {
   if (!(this instanceof USSensor)) {
-    try {
-      return new USSensor(port)
-    } catch (e) {
-      throw new Error(`No ultrasonic sensor in port ${port}`)
-    }
+    return new USSensor(port)
   }
-  Device.call(this, devices(port))
+  try {
+    Device.call(this, devices(port))
+  } catch (e) {
+    throw new Error(`No ultrasonic sensor in port ${port}`)
+  }
 }
 
 inherit(USSensor, Device)

@@ -18,13 +18,13 @@ module.exports = IRSensor['default'] = IRSensor
  */
 function IRSensor (port) {
   if (!(this instanceof IRSensor)) {
-    try {
-      return new IRSensor(port)
-    } catch (e) {
-      throw new Error('IR sensor not found')
-    }
+    return new IRSensor(port)
   }
-  Device.call(this, devices(port))
+  try {
+    Device.call(this, devices(port))
+  } catch (e) {
+    throw new Error('IR sensor not found')
+  }
 }
 
 inherit(IRSensor, Device)
