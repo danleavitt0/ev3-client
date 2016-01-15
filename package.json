@@ -23,7 +23,7 @@
     "body-parser": "^1.14.1",
     "brace": "^0.5.1",
     "bufferutil": "^1.2.1",
-    "color-sensor": "^0.1.12",
+    "color-sensor": "^0.1.13",
     "cors": "^2.7.1",
     "enroute": "^1.0.1",
     "ev3-js-color-sensor": "^0.1.5",
