@@ -1,7 +1,8 @@
 var spawn = require('child_process').spawn
 
 var nodes = []
-for (var i = 0; i < 3; i++) {
+var num  = 1
+for (var i = 0; i < num; i++) {
 	nodes.push(createSpawn())
 }
  
@@ -10,7 +11,7 @@ exports.run = function (file) {
 	var node = nodes[idx]
 	node.stdin.write(file, 'utf-8')
 	nodes[idx] = createSpawn()
-	idx = (idx + 1) % 3
+	idx = (idx + 1) % num
 	return node
 }
 
