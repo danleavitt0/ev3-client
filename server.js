@@ -164,7 +164,7 @@ function createNode (file) {
   })
   n.stderr.on('data', function (data) {
     var split = data.split('\n\n')
-    if (split) {
+    if (split[1]) {
       var trace = parsetrace({stack: split[1]}).object()
       var err = [
         'Error: ' + trace.error,
