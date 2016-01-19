@@ -915,13 +915,7 @@ var SensorReadOut = (function (_Component) {
 
 	_createClass(SensorReadOut, [{
 		key: 'componentDidMount',
-		value: function componentDidMount() {
-			var _this2 = this;
-
-			setInterval(function () {
-				return _this2.props.dispatch((0, _sensors.findSensors)());
-			}, 2000);
-		}
+		value: function componentDidMount() {}
 	}, {
 		key: 'render',
 		value: function render() {
