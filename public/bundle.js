@@ -915,7 +915,13 @@ var SensorReadOut = (function (_Component) {
 
 	_createClass(SensorReadOut, [{
 		key: 'componentDidMount',
-		value: function componentDidMount() {}
+		value: function componentDidMount() {
+			var _this2 = this;
+
+			setInterval(function () {
+				return _this2.props.dispatch((0, _sensors.findSensors)());
+			}, 2000);
+		}
 	}, {
 		key: 'render',
 		value: function render() {
@@ -944,6 +950,11 @@ var SensorReadOut = (function (_Component) {
 						_tabs.Tab,
 						{ style: styles.tab, label: 'console' },
 						_react2.default.createElement(_Log2.default, { log: this.props.log, dispatch: dispatch })
+					),
+					_react2.default.createElement(
+						_tabs.Tab,
+						{ style: styles.tab, label: 'sensor widgets' },
+						widgets
 					)
 				)
 			);
