@@ -924,9 +924,14 @@ var SensorReadOut = (function (_Component) {
 		value: function componentDidMount() {
 			var _this2 = this;
 
-			setInterval(function () {
+			this.interval = setInterval(function () {
 				return _this2.props.dispatch((0, _sensors.findSensors)());
 			}, 2000);
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			clearInterval(this.interval);
 		}
 	}, {
 		key: 'render',
@@ -956,11 +961,6 @@ var SensorReadOut = (function (_Component) {
 						_tabs.Tab,
 						{ style: styles.tab, label: 'console' },
 						_react2.default.createElement(_Log2.default, { log: this.props.log, dispatch: dispatch })
-					),
-					_react2.default.createElement(
-						_tabs.Tab,
-						{ style: styles.tab, label: 'sensor widgets' },
-						widgets
 					)
 				)
 			);
