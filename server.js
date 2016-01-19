@@ -3,14 +3,9 @@
 var express = require('express')
 var bodyParser = require('body-parser')
 var fs = require('fs')
-var ip = require('ip')
 var cors = require('cors')
 var path = require('path')
-var livereload = require('express-livereload')
-var spawn = require('child_process').spawn
-var MoveSteering = require('move-steering')
 var devices = require('ev3-js-devices')
-var moment = require('moment')
 var app = express()
 var http = require('http').Server(app)
 var parsetrace = require('parsetrace')
@@ -190,6 +185,4 @@ app.get('*', function (req, res) {
 
 
 var port = process.env.port || 3000
-http.listen(port, function () {
-  console.log('In your browser, navigate to ' + ip.address() + ':' + port)
-})
+http.listen(port)
