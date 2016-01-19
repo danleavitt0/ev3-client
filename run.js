@@ -1,3 +1,11 @@
+require('move-steering')
+require('color-sensor')
+require('ultrasonic-sensor')
+require('ir-sensor')
+require('ev3-js-motor')
+require('ev3-js-wait')
+require('touch-sensor')
+
 var fs = require('fs')
 process.stdin.setEncoding('utf-8')
 process.stdin.on('data', function(filePath) {

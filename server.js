@@ -32,11 +32,12 @@ app.post('/file.get/:name', function (req, res) {
 })
 
 app.post('/log.get', function (req,res) {
-  if (!fs.existsSync(__dirname + '/log.txt')) {
-    fs.writeFileSync(__dirname + '/log.txt', '')
-  }
-  var file = fs.readFileSync('log.txt', 'utf-8')
-  res.json({ ok: true, data: file })
+  var file = fs.readFile('log.txt', 'utf-8', function (err, data) {
+    if (err) {
+      res.json({ ok: false, data: err })
+    }
+    res.json({ ok: true, data: data })
+  })
 })
 
 app.post('/file.save', function (req, res) {
@@ -73,6 +74,7 @@ app.post('/file.run', function (req, res) {
   }
   node = createNode(file)
   node.on('exit', function () {
+    console.log('exit')
     res.json({ok: true, message: 'Run finished'})
   })
 })
