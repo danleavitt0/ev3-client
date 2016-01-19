@@ -73,6 +73,7 @@ app.post('/file.run', function (req, res) {
   }
   node = createNode(file)
   node.on('exit', function () {
+    console.log('exit')
     res.json({ok: true, message: 'Run finished'})
   })
 })

@@ -950,11 +950,6 @@ var SensorReadOut = (function (_Component) {
 						_tabs.Tab,
 						{ style: styles.tab, label: 'console' },
 						_react2.default.createElement(_Log2.default, { log: this.props.log, dispatch: dispatch })
-					),
-					_react2.default.createElement(
-						_tabs.Tab,
-						{ style: styles.tab, label: 'sensor widgets' },
-						widgets
 					)
 				)
 			);
