@@ -29,7 +29,9 @@ app.post('/file.get/:name', function (req, res) {
 app.post('/log.get', function (req,res) {
   var file = fs.readFile('log.txt', 'utf-8', function (err, data) {
     if (err) {
-      fs.writeFile('log.txt', '')
+      fs.writeFile('log.txt', '', function () {
+        res.json({ ok: true, data: 'Create log.txt'})
+      })
     } else {
       res.json({ ok: true, data: data })
     }
@@ -66,14 +68,7 @@ app.post('/file.stop', function (req, res) {
 
 app.post('/file.run', function (req, res) {
   var file = __dirname + '/files/' + req.body.fileName
-  if (node) {
-    node.kill()
-  }
   node = createNode(file)
-  node.on('exit', function () {
-    console.log('exit')
-    res.json({ok: true, message: 'Run finished'})
-  })
 })
 
 app.post('/file.getAll', function (req, res) {
@@ -163,9 +158,9 @@ function createNode (file) {
     fs.appendFileSync('log.txt', data)
   })
   n.stderr.on('data', function (data) {
-    var split = data.split('\n\n')
-    if (split[1]) {
-      var trace = parsetrace({stack: split[1]}).object()
+    var error = data.split('^')[1].trim()
+    if (error) {
+      var trace = parsetrace({stack: error}).object()
       var errFile = trace.frames[0].file.slice((__dirname + '/files/').length).indexOf('anonymous') > -1 ? 
         file.slice((__dirname + '/files/').length) :
         trace.frames[0].file.slice((__dirname + '/files/').length)
@@ -182,7 +177,7 @@ function createNode (file) {
 }
 
 app.get('*', function (req, res) {
-  res.sendfile(__dirname + '/public/index.html')
+  res.sendFile(__dirname + '/public/index.html')
 })
 
 
