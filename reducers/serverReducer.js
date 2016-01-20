@@ -1,9 +1,14 @@
 import {LOAD_FILE, IS_SAVING, FINISH_SERVER, IS_LOADING, IS_RUNNING, SAVE_LOG} from '../actions/actions'
-import {URL_DID_CHANGE} from '../actions/initialize'
+import {URL_DID_CHANGE, SET_FILE_LIST} from '../actions/initialize'
 
 
 function reducer (state={}, action) {
 	switch (action.type) {
+		case SET_FILE_LIST:
+			return {
+				...state,
+				files: action.payload
+			}
 		case URL_DID_CHANGE:
 			return {
 				...state,

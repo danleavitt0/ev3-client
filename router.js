@@ -18,7 +18,10 @@ const style = {
 }
 
 function home (params, props) {
-	return <Home style={style.font} {...props}/>
+	return <Home
+            style={style.font}
+            files={props.state.files}
+            {...props} />
 }
 
 function editor (params, props) {

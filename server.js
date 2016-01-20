@@ -38,6 +38,12 @@ app.post('/log.get', function (req,res) {
   })
 })
 
+app.post('/log.clear', function (req, res) {
+  fs.writeFile('log.txt', '', function () {
+    res.json({ ok: true, data: 'Create log.txt'})
+  })
+})
+
 app.post('/file.save', function (req, res) {
   if (!fs.existsSync(__dirname + '/files/')) {
     fs.mkdirSync(__dirname + '/files/')

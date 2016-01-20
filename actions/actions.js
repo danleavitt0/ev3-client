@@ -110,6 +110,12 @@ function getLog () {
 		}), saveLog, err => console.warn(err))
 }
 
+function clearLog () {
+	return fetch('/log.clear', {
+		method: 'POST'
+	})
+}
+
 function saveLog (data) {
 	return {
 		type: SAVE_LOG,
@@ -131,5 +137,6 @@ export {
 	startRun,
 	stop,
 	getLog,
-	startPull
+	startPull,
+	clearLog
 }
