@@ -17,10 +17,14 @@ module.exports = TouchSensor['default'] = TouchSensor
  * @param {Number} port number of touch sensor port
  */
 function TouchSensor (port) {
-  if (!(this instanceof TouchSensor)) {
-    return new TouchSensor(port)
+  try {
+    if (!(this instanceof TouchSensor)) {
+      return new TouchSensor(port)
+    }
+    Device.call(this, devices(port))
+  } catch (e) {
+    throw(e)
   }
-  Device.call(this, devices(port))
 }
 
 inherit(TouchSensor, Device)
