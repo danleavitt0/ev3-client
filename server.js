@@ -62,13 +62,17 @@ app.post('/file.stop', function (req, res) {
     console.warn('no motors attached')
   }
   res.json({
-    ok: true
+    ok: true,
+    message: 'Run finished'
   })
 })
 
 app.post('/file.run', function (req, res) {
   var file = __dirname + '/files/' + req.body.fileName
   node = createNode(file)
+  node.on('exit', function () {
+    res.json({ok: true, message: 'Run finished'})
+  })
 })
 
 app.post('/file.getAll', function (req, res) {
