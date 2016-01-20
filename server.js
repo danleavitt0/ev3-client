@@ -30,8 +30,9 @@ app.post('/log.get', function (req,res) {
   var file = fs.readFile('log.txt', 'utf-8', function (err, data) {
     if (err) {
       res.json({ ok: false, data: err })
+    } else {
+      res.json({ ok: true, data: data })
     }
-    res.json({ ok: true, data: data })
   })
 })
 
@@ -45,8 +46,9 @@ app.post('/file.save', function (req, res) {
     function (err, data) {
       if (err) {
         res.json({ok: false, message: 'Failed to save data, please try again.'})
+      } else {
+        res.json({ok: true, message: 'Save Successful'})
       }
-      res.json({ok: true, message: 'Save Successful'})
     })
 })
 
