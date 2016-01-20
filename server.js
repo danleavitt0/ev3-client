@@ -159,11 +159,10 @@ function createNode (file) {
   n.stdout.setEncoding('utf-8')
   n.stderr.setEncoding('utf-8')
   n.stdout.on('data', function (data) {
-    // fs.appendFileSync('log.txt', data)
+    fs.appendFileSync('log.txt', data)
   })
   n.stderr.on('data', function (data) {
-    var error = data.split('^\n')[1].trim()
-    var trace = parsetrace({stack: error}).object()
+    var trace = parsetrace({stack: data}).object()
     var lineNum = trace.frames.reduce(function (str, next) {
       if (next.file.indexOf('run.js') > -1 && !str) {
         return str += next.line
@@ -177,10 +176,13 @@ function createNode (file) {
       'Line: ' + lineNum,
       '\n'
     ].join('\n')
-    fs.appendFileSync('log.txt', err)
+    if(lineNum) {
+      fs.appendFileSync('log.txt', err)
+    }
   })
   return n
 }
+
 
 app.get('*', function (req, res) {
   res.sendFile(__dirname + '/public/index.html')
