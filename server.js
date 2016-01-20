@@ -162,7 +162,7 @@ function createNode (file) {
     // fs.appendFileSync('log.txt', data)
   })
   n.stderr.on('data', function (data) {
-    var error = data.split('\n\n')[1].trim()
+    var error = data.split('^\n')[1].trim()
     var trace = parsetrace({stack: error}).object()
     var lineNum = trace.frames.reduce(function (str, next) {
       if (next.file.indexOf('run.js') > -1 && !str) {
