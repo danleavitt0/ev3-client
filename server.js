@@ -162,7 +162,8 @@ function createNode (file) {
     fs.appendFileSync('log.txt', data)
   })
   n.stderr.on('data', function (data) {
-    var error = data.split('^')[1].trim()
+    var error = data.split('^')[1]
+    error = error && error.trim()
     if (error) {
       var trace = parsetrace({stack: error}).object()
       var errFile = trace.frames[0].file.slice((__dirname + '/files/').length).indexOf('anonymous') > -1 ? 
