@@ -29,7 +29,7 @@ function startRun(file) {
 		body: JSON.stringify({
 			fileName: file
 		})
-	}), finishServer, function () {
+	}), finishServer, function (err) {
 		return console.warn(err);
 	}), startRunning()];
 }

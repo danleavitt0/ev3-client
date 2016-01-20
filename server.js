@@ -159,24 +159,25 @@ function createNode (file) {
   n.stdout.setEncoding('utf-8')
   n.stderr.setEncoding('utf-8')
   n.stdout.on('data', function (data) {
-    fs.appendFileSync('log.txt', data)
+    // fs.appendFileSync('log.txt', data)
   })
   n.stderr.on('data', function (data) {
-    var error = data.split('^')[1]
-    error = error && error.trim()
-    if (error) {
-      var trace = parsetrace({stack: error}).object()
-      var errFile = trace.frames[0].file.slice((__dirname + '/files/').length).indexOf('anonymous') > -1 ? 
-        file.slice((__dirname + '/files/').length) :
-        trace.frames[0].file.slice((__dirname + '/files/').length)
-      var err = [
-        'Error: ' + trace.error,
-        'File: ' + errFile,
-        'Line: ' + trace.frames[0].line,
-        '\n'
-      ].join('\n')
-      fs.appendFileSync('log.txt', err)
-    }
+    var error = data.split('\n\n')[1].trim()
+    var trace = parsetrace({stack: error}).object()
+    var lineNum = trace.frames.reduce(function (str, next) {
+      if (next.file.indexOf('run.js') > -1 && !str) {
+        return str += next.line
+      } else {
+        return str
+      }
+    }, '')
+    var err = [
+      'Error: ' + trace.error,
+      'File: run.js',
+      'Line: ' + lineNum,
+      '\n'
+    ].join('\n')
+    fs.appendFileSync('log.txt', err)
   })
   return n
 }

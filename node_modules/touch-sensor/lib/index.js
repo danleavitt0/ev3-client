@@ -23,7 +23,7 @@ function TouchSensor (port) {
     }
     Device.call(this, devices(port))
   } catch (e) {
-    throw(e)
+    throw new Error('Can not find touch sensor in port ' + port)
   }
 }
 
