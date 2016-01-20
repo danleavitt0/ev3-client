@@ -29,7 +29,7 @@ app.post('/file.get/:name', function (req, res) {
 app.post('/log.get', function (req,res) {
   var file = fs.readFile('log.txt', 'utf-8', function (err, data) {
     if (err) {
-      res.json({ ok: false, data: err })
+      fs.writeFile('log.txt', '')
     } else {
       res.json({ ok: true, data: data })
     }
