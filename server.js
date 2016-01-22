@@ -10,7 +10,7 @@ var app = express()
 var http = require('http').Server(app)
 var parsetrace = require('parsetrace')
 var cluster = require('./cluster')
-var spawn = require('child_process').spawn
+var spawn = require('child_xprocess').spawn
 
 var ports = ['a', 'b', 'c', 'd', 1, 2, 3, 4]
 
@@ -28,7 +28,7 @@ app.post('/file.get/:name', function (req, res) {
 })
 
 app.post('/log.get', function (req,res) {
-  var file = fs.readFile('log.txt', 'utf-8', function (err, data) {
+  var file = fs.readFile(__dirname + '/log.txt', 'utf-8', function (err, data) {
     if (err) {
       fs.writeFile('log.txt', '', function () {
         res.json({ ok: true, data: 'Create log.txt'})
@@ -40,7 +40,7 @@ app.post('/log.get', function (req,res) {
 })
 
 app.post('/log.clear', function (req, res) {
-  fs.writeFile('log.txt', '', function () {
+  fs.writeFile(__dirname + '/log.txt', '', function () {
     res.json({ ok: true, data: 'Create log.txt'})
   })
 })
@@ -54,7 +54,7 @@ app.post('/file.save', function (req, res) {
     req.body.text,
     function (err, data) {
       if (err) {
-        res.json({ok: false, message: 'Failed to save data, please try again.'})
+        res.json({ok: false, message: err})
       } else {
         res.json({ok: true, message: 'Save Successful'})
       }
@@ -62,7 +62,9 @@ app.post('/file.save', function (req, res) {
 })
 
 app.post('/file.stop', function (req, res) {
-  node.kill()
+  if(node) {
+    node.kill()
+  }
   try {
     MoveSteering().reset()
   } catch (e) {
