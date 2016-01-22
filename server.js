@@ -30,7 +30,7 @@ app.post('/file.get/:name', function (req, res) {
 app.post('/log.get', function (req,res) {
   var file = fs.readFile(__dirname + '/log.txt', 'utf-8', function (err, data) {
     if (err) {
-      fs.writeFile('log.txt', '', function () {
+      fs.writeFile(__dirname + 'log.txt', '', function () {
         res.json({ ok: true, data: 'Create log.txt'})
       })
     } else {
