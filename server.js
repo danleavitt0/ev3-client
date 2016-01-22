@@ -28,9 +28,9 @@ app.post('/file.get/:name', function (req, res) {
 })
 
 app.post('/log.get', function (req,res) {
-  var file = fs.readFile(__dirname + '/log.txt', 'utf-8', function (err, data) {
+  var file = fs.readFile('log.txt', 'utf-8', function (err, data) {
     if (err) {
-      fs.writeFile(__dirname + 'log.txt', '', function () {
+      fs.writeFile('log.txt', '', function () {
         res.json({ ok: true, data: 'Create log.txt'})
       })
     } else {
@@ -40,7 +40,7 @@ app.post('/log.get', function (req,res) {
 })
 
 app.post('/log.clear', function (req, res) {
-  fs.writeFile(__dirname + '/log.txt', '', function () {
+  fs.writeFile('log.txt', '', function () {
     res.json({ ok: true, data: 'Create log.txt'})
   })
 })
