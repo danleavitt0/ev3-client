@@ -1,6 +1,6 @@
 #!/bin/sh
 
-EXEC=/home/robot/ev3/node_modules/.bin/forever
+EXEC=/usr/bin/node
 FILE=/home/robot/ev3/server.js
 
 case "$1" in 

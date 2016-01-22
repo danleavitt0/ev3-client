@@ -18,5 +18,5 @@ exports.run = function (file) {
 }
 
 function createSpawn () {
-	return spawn('node', ['run.js'])
+	return spawn('node', [__dirname + '/run.js'])
 }
