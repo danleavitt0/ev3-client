@@ -10,7 +10,7 @@ var app = express()
 var http = require('http').Server(app)
 var parsetrace = require('parsetrace')
 var cluster = require('./cluster')
-var spawn = require('child_xprocess').spawn
+var spawn = require('child_process').spawn
 
 var ports = ['a', 'b', 'c', 'd', 1, 2, 3, 4]
 
