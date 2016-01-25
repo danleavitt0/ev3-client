@@ -2213,7 +2213,13 @@ exports.default = function (_ref) {
   return function (next) {
     return function (action) {
       if (action.type === 'URL_DID_CHANGE' && action.payload.split('/')[1] === 'edit') {
-        dispatch((0, _actions.fetchFile)('/file.get/' + action.payload.split('/')[2]));
+        var fileName = action.payload.split('/')[2];
+        var extension = fileName.split('.')[1];
+        if (!extension) {
+          fileName += '.js';
+          action.payload += '.js';
+        }
+        dispatch((0, _actions.fetchFile)('/file.get/' + fileName));
       }
       return next(action);
     };

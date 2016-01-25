@@ -21,9 +21,7 @@ app.use('/static', express.static(__dirname + '/public'))
 var node
 
 app.post('/file.get/:name', function (req, res) {
-  var extension = req.params.name.split('.')[1]
   var file = __dirname + '/files/' + req.params.name
-  file = extension ? file : file + '.js'
   fs.readFile(file, 'utf-8', function (err, data) {
     if (err)  {
       var startString = 'var MoveSteering = require(\'move-steering\')'
