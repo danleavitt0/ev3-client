@@ -28,7 +28,7 @@ function editor (params, props) {
   if (props.state.loading) {
   	return (
       <Loading
-        title={props.title} 
+        title={params.id} 
         style={style.font} />
     )
   }

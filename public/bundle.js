@@ -81681,7 +81681,7 @@ function home(params, props) {
 function editor(params, props) {
   if (props.state.loading) {
     return _react2.default.createElement(_loading2.default, {
-      title: props.title,
+      title: params.id,
       style: style.font });
   }
   return _react2.default.createElement(_editor2.default, _extends({
