@@ -158,7 +158,7 @@ function turnToDegrees (turn, speed, degrees) {
   opts.right = { speed: opts.right }
 
   var reducedSpeed = otherSpeed(turn, speed)
-  var reducedDegrees = (reducedSpeed / speed) * degrees
+  var reducedDegrees = Math.round((reducedSpeed / speed) * degrees)
   reducedSpeed = Math.abs(reducedSpeed)
 
   opts.left.degrees = turn < 0 ? reducedDegrees : degrees
