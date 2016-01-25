@@ -77,8 +77,8 @@ app.post('/file.stop', function (req, res) {
 })
 
 app.post('/file.run', function (req, res) {
-  var file = __dirname + '/files/' + req.body.fileName
-  node = createNode(file)
+  var filePath = __dirname + '/files/' + req.body.fileName
+  node = createNode(filePath, req.body.fileName)
   node.on('exit', function () {
     res.json({ok: true, message: 'Run finished'})
   })
@@ -163,8 +163,8 @@ app.post('/source.update', function (req, res) {
   })
 })
 
-function createNode (file) {
-  var n = cluster.run(file)
+function createNode (filePath, fileName) {
+  var n = cluster.run(filePath)
   n.stdout.setEncoding('utf-8')
   n.stderr.setEncoding('utf-8')
   n.stdout.on('data', function (data) {
@@ -181,7 +181,7 @@ function createNode (file) {
     }, '')
     var err = [
       'Error: ' + trace.error,
-      'File: run.js',
+      'File: ' + fileName,
       'Line: ' + lineNum,
       '\n'
     ].join('\n')
@@ -199,4 +199,4 @@ app.get('*', function (req, res) {
 
 
 var port = process.env.port || 3000
-http.listen(port)
+http.listen(port) 

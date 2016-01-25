@@ -175,5 +175,5 @@ function turnToDegrees (turn, speed, degrees) {
  */
 
 function otherSpeed (turn, speed) {
-  return speed * ((100 - (Math.abs(turn) * 2)) / 100)
+  return Math.round(speed * ((100 - (Math.abs(turn) * 2)) / 100))
 }
