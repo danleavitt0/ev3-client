@@ -1208,53 +1208,41 @@ var styles = {
 	}
 };
 
+function replaceHeight(element) {
+	return _react2.default.cloneElement(element, { style: { display: 'flex', height: window.innerHeight - 64 } });
+}
+
 var Split = function (_Component) {
 	_inherits(Split, _Component);
 
 	function Split(props) {
 		_classCallCheck(this, Split);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Split).call(this, props));
-
-		_this.state = {
-			height: window.innerHeight - 64
-		};
-		return _this;
+		return _possibleConstructorReturn(this, Object.getPrototypeOf(Split).call(this, props));
 	}
 
 	_createClass(Split, [{
-		key: 'componentDidMount',
-		value: function componentDidMount() {
-			window.addEventListener('resize', this.handleResize.bind(this));
-		}
-	}, {
-		key: 'handleResize',
-		value: function handleResize(e) {
-			this.setState({
-				height: window.innerHeight - 64
-			});
-		}
-	}, {
 		key: 'render',
 		value: function render() {
+			var elements = _react2.default.createElement(
+				'div',
+				{ style: styles.container },
+				_react2.default.createElement(
+					'div',
+					{ style: styles.left },
+					this.props.left
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: styles.right },
+					this.props.right
+				)
+			);
 			return _react2.default.createElement(
 				'div',
 				null,
 				this.props.nav,
-				_react2.default.createElement(
-					'div',
-					{ style: (0, _utils.merge)(styles.container, { height: this.state.height }) },
-					_react2.default.createElement(
-						'div',
-						{ style: styles.left },
-						this.props.left
-					),
-					_react2.default.createElement(
-						'div',
-						{ style: styles.right },
-						this.props.right
-					)
-				)
+				replaceHeight(elements)
 			);
 		}
 	}]);
@@ -1456,6 +1444,7 @@ var Editor = function (_Component) {
 						width: '100%',
 						ref: 'editor',
 						tabSize: 2,
+						editorProps: { $blockScrolling: true },
 						showPrintMargin: false }),
 					right: _react2.default.createElement(_sensorReadOut2.default, {
 						log: this.props.log,
