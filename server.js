@@ -21,8 +21,15 @@ app.use('/static', express.static(__dirname + '/public'))
 var node
 
 app.post('/file.get/:name', function (req, res) {
-  fs.readFile(__dirname + '/files/' + req.params.name, 'utf-8', function (err, data) {
-    if (err)  return res.send('var MoveSteering = require(\'move-steering\')')
+  var extension = req.params.name.split('.')[1]
+  var file = __dirname + '/files/' + req.params.name
+  file = extension ? file : file + '.js'
+  fs.readFile(file, 'utf-8', function (err, data) {
+    if (err)  {
+      var startString = 'var MoveSteering = require(\'move-steering\')'
+      fs.writeFileSync(file, startString)
+      return res.send(startString)
+    }
     res.send(data)
   })
 })

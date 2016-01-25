@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "devtool server.js --watch && watchify index.js -o ./public/bundle.js -t [babelify]",
+    "dev": "watchify index.js -o ./public/bundle.js -t [babelify] & devtool server.js --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

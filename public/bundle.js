@@ -152,7 +152,7 @@ exports.clearLog = clearLog;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.initializeApp = exports.SET_FILE_LIST = exports.URL_DID_CHANGE = undefined;
+exports.getFileList = exports.initializeApp = exports.SET_FILE_LIST = exports.URL_DID_CHANGE = undefined;
 
 var _reduxEffectsLocation = require('redux-effects-location');
 
@@ -180,7 +180,6 @@ function getFileList() {
 }
 
 function setList(files) {
-  console.log(files);
   return {
     type: SET_FILE_LIST,
     payload: JSON.parse(files)
@@ -197,6 +196,7 @@ function urlDidChange(url) {
 exports.URL_DID_CHANGE = URL_DID_CHANGE;
 exports.SET_FILE_LIST = SET_FILE_LIST;
 exports.initializeApp = initializeApp;
+exports.getFileList = getFileList;
 
 },{"redux-effects":403,"redux-effects-fetch":401,"redux-effects-location":402}],3:[function(require,module,exports){
 'use strict';
@@ -1424,7 +1424,7 @@ var Editor = function (_Component) {
 					style: styles.button,
 					primary: true,
 					label: 'Save',
-					disabled: this.state.saving || !this.state.dirty }),
+					disabled: this.state.saving || !this.state.dirty || this.state.running }),
 				_react2.default.createElement(_lib.RaisedButton, {
 					onClick: this.run.bind(this),
 					style: styles.button,
@@ -1507,6 +1507,8 @@ var _nav2 = _interopRequireDefault(_nav);
 
 var _actions = require('../../actions/actions');
 
+var _initialize = require('../../actions/initialize');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1515,7 +1517,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var style = {
+var styles = {
   cardList: {
     width: '80%',
     margin: '0 auto'
@@ -1528,6 +1530,10 @@ var style = {
   },
   label: {
     marginRight: 15
+  },
+  content: {
+    display: 'flex',
+    alignItems: 'center'
   }
 };
 
@@ -1540,7 +1546,8 @@ var Home = function (_Component) {
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Home).call(this, props));
 
     _this.state = {
-      showDialog: false
+      showDialog: false,
+      errorText: ''
     };
     return _this;
   }
@@ -1548,9 +1555,19 @@ var Home = function (_Component) {
   _createClass(Home, [{
     key: 'createFile',
     value: function createFile() {
+      var _this2 = this;
+
       this.setState({
         showDialog: true
       });
+      setTimeout(function () {
+        return _this2.refs.name.focus();
+      });
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.props.dispatch((0, _initialize.getFileList)());
     }
   }, {
     key: 'pullButtonClick',
@@ -1561,13 +1578,25 @@ var Home = function (_Component) {
     key: '_onDialogCancel',
     value: function _onDialogCancel() {
       this.setState({
-        showDialog: false
+        showDialog: false,
+        errorText: ''
       });
     }
   }, {
     key: '_onDialogSubmit',
     value: function _onDialogSubmit() {
       this.props.dispatch((0, _actions.setNewUrl)('/edit/' + this.refs.name.getValue()));
+      this.setState({
+        errorText: ''
+      });
+    }
+  }, {
+    key: '_handleTextChange',
+    value: function _handleTextChange(e) {
+      var errorText = e.target.value.match(/\s/g) ? 'No spaces allowed' : '';
+      this.setState({
+        errorText: errorText
+      });
     }
   }, {
     key: 'render',
@@ -1579,14 +1608,14 @@ var Home = function (_Component) {
         null,
         'No files found'
       );
-      var standardActions = [{ text: 'Cancel', onTouchTap: this._onDialogCancel.bind(this) }, { text: 'Submit', onTouchTap: this._onDialogSubmit.bind(this), ref: 'submit' }];
+      var standardActions = [_react2.default.createElement(_lib.FlatButton, { key: 0, secondary: true, label: 'Cancel', onTouchTap: this._onDialogCancel.bind(this) }), _react2.default.createElement(_lib.FlatButton, { key: 1, primary: true, label: 'Submit', onTouchTap: this._onDialogSubmit.bind(this), ref: 'submit', disabled: this.state.errorText.length > 0 })];
       return _react2.default.createElement(
         _main2.default,
         { nav: _react2.default.createElement(_nav2.default, { title: 'EV3.js', iconRight: _react2.default.createElement(_lib.FlatButton, { onClick: this.createFile.bind(this), label: 'Create' }) }) },
         _react2.default.createElement(_lib.FlatButton, { onClick: this.pullButtonClick.bind(this), label: 'Pull Updates' }),
         _react2.default.createElement(
           'div',
-          { style: style.cardList },
+          { style: styles.cardList },
           _react2.default.createElement(
             _lib.List,
             null,
@@ -1598,13 +1627,17 @@ var Home = function (_Component) {
           {
             open: this.state.showDialog,
             ref: 'create',
-            actions: standardActions },
+            actions: standardActions,
+            bodyStyle: styles.content },
           _react2.default.createElement(
             'label',
-            { style: style.label },
+            { style: styles.label },
             'Name Program:'
           ),
-          _react2.default.createElement(_lib.TextField, { ref: 'name' })
+          _react2.default.createElement(_lib.TextField, {
+            onChange: this._handleTextChange.bind(this),
+            errorText: this.state.errorText,
+            ref: 'name' })
         )
       );
     }
@@ -1615,7 +1648,7 @@ var Home = function (_Component) {
 
 exports.default = Home;
 
-},{"../../actions/actions":1,"../components/nav":8,"../components/project":9,"../layouts/main":12,"material-ui/lib":123,"react":399,"react-redux":256}],17:[function(require,module,exports){
+},{"../../actions/actions":1,"../../actions/initialize":2,"../components/nav":8,"../components/project":9,"../layouts/main":12,"material-ui/lib":123,"react":399,"react-redux":256}],17:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -1633,6 +1666,10 @@ var _main = require('../layouts/main');
 var _main2 = _interopRequireDefault(_main);
 
 var _lib = require('material-ui/lib');
+
+var _nav = require('../components/nav');
+
+var _nav2 = _interopRequireDefault(_nav);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1656,8 +1693,8 @@ var NotFound = function (_Component) {
 		value: function render() {
 			return _react2.default.createElement(
 				_main2.default,
-				{ title: 'EV3.js' },
-				_react2.default.createElement(_lib.CircularProgress, { mode: 'indeterminate', size: 1.5 })
+				{ nav: _react2.default.createElement(_nav2.default, { title: this.props.title }) },
+				_react2.default.createElement(_lib.LinearProgress, { mode: 'indeterminate', size: 1.5 })
 			);
 		}
 	}]);
@@ -1667,7 +1704,7 @@ var NotFound = function (_Component) {
 
 exports.default = NotFound;
 
-},{"../layouts/main":12,"material-ui/lib":123,"react":399}],18:[function(require,module,exports){
+},{"../components/nav":8,"../layouts/main":12,"material-ui/lib":123,"react":399}],18:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -81637,7 +81674,9 @@ function home(params, props) {
 
 function editor(params, props) {
   if (props.state.loading) {
-    return _react2.default.createElement(_loading2.default, null);
+    return _react2.default.createElement(_loading2.default, {
+      title: props.title,
+      style: style.font });
   }
   return _react2.default.createElement(_editor2.default, _extends({
     style: style.font,

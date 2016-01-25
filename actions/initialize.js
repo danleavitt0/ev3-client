@@ -23,7 +23,6 @@ function getFileList () {
 }
 
 function setList (files) {
-	console.log(files)
 	return {
 		type: SET_FILE_LIST,
 		payload: JSON.parse(files)
@@ -40,5 +39,6 @@ function urlDidChange (url) {
 export {
   URL_DID_CHANGE,
   SET_FILE_LIST,
-  initializeApp
+  initializeApp,
+  getFileList
 }

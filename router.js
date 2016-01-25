@@ -26,7 +26,11 @@ function home (params, props) {
 
 function editor (params, props) {
   if (props.state.loading) {
-  	return <Loading />
+  	return (
+      <Loading
+        title={props.title} 
+        style={style.font} />
+    )
   }
 	return <Editor
     style={style.font}
