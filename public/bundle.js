@@ -1671,6 +1671,10 @@ var _nav = require('../components/nav');
 
 var _nav2 = _interopRequireDefault(_nav);
 
+var _button = require('../components/button');
+
+var _button2 = _interopRequireDefault(_button);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1693,7 +1697,7 @@ var NotFound = function (_Component) {
 		value: function render() {
 			return _react2.default.createElement(
 				_main2.default,
-				{ nav: _react2.default.createElement(_nav2.default, { title: this.props.title }) },
+				{ nav: _react2.default.createElement(_nav2.default, { iconLeft: _react2.default.createElement(_button2.default, null), title: this.props.title }) },
 				_react2.default.createElement(_lib.LinearProgress, { mode: 'indeterminate', size: 1.5 })
 			);
 		}
@@ -1704,7 +1708,7 @@ var NotFound = function (_Component) {
 
 exports.default = NotFound;
 
-},{"../components/nav":8,"../layouts/main":12,"material-ui/lib":123,"react":399}],18:[function(require,module,exports){
+},{"../components/button":7,"../components/nav":8,"../layouts/main":12,"material-ui/lib":123,"react":399}],18:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
