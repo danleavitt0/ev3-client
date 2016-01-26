@@ -1386,7 +1386,18 @@ var Editor = function (_Component) {
 	}, {
 		key: 'run',
 		value: function run(e) {
-			return this.props.dispatch((0, _actions.startRun)(this.props.title));
+			var _this2 = this;
+
+			if (this.state.dirty) {
+				this.save();
+			}
+			if (this.state.running) {
+				setTimeout(function () {
+					_this2.run();
+				});
+			} else {
+				this.props.dispatch((0, _actions.startRun)(this.props.title));
+			}
 		}
 	}, {
 		key: 'stop',
@@ -1422,7 +1433,7 @@ var Editor = function (_Component) {
 					onClick: this.stop.bind(this),
 					style: styles.button,
 					label: 'Stop',
-					disabled: !this.state.running })
+					disable: this.state.saving })
 			);
 			return _react2.default.createElement(
 				'div',
