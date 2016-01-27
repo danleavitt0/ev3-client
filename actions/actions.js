@@ -1,6 +1,7 @@
 import {bindUrl, setUrl} from 'redux-effects-location'
 import {fetch} from 'redux-effects-fetch'
 import {bind} from 'redux-effects'
+import {getFileList} from './initialize'
 
 const LOAD_FILE = 'LOAD_FILE'
 const IS_SAVING = 'IS_SAVING'
@@ -8,6 +9,7 @@ const FINISH_SERVER = 'FINISH_SERVER'
 const IS_LOADING = 'IS_LOADING'
 const IS_RUNNING = 'IS_RUNNING'
 const SAVE_LOG = 'SAVE_LOG'
+const SET_API_URL = 'SET_API_URL'
 
 function startRun (file) {
 	return [
@@ -123,6 +125,32 @@ function saveLog (data) {
 	}
 }
 
+function connectEV3 (url) {
+	return bind(fetch('/connect', {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			url
+		})
+	}), setApiUrl, (err) => console.warn(err))
+}
+
+function setApiUrl (msg) {
+	return [
+		{
+			type: SET_API_URL,
+			payload: {
+				url: msg.url
+			}
+		},
+		getFileList()
+	]
+}
+
+
 export {
 	LOAD_FILE,
 	IS_SAVING,
@@ -130,6 +158,7 @@ export {
 	IS_LOADING,
 	IS_RUNNING,
 	SAVE_LOG,
+	SET_API_URL,
 
 	fetchFile,
 	startSave,
@@ -138,5 +167,6 @@ export {
 	stop,
 	getLog,
 	startPull,
-	clearLog
+	clearLog,
+	connectEV3
 }

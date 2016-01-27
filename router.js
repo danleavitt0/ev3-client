@@ -21,6 +21,7 @@ function home (params, props) {
 	return <Home
             style={style.font}
             files={props.state.files}
+            apiUrl={props.state.apiUrl}
             {...props} />
 }
 

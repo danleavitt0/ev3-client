@@ -4,7 +4,7 @@
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.clearLog = exports.startPull = exports.getLog = exports.stop = exports.startRun = exports.setNewUrl = exports.startSave = exports.fetchFile = exports.SAVE_LOG = exports.IS_RUNNING = exports.IS_LOADING = exports.FINISH_SERVER = exports.IS_SAVING = exports.LOAD_FILE = undefined;
+exports.connectEV3 = exports.clearLog = exports.startPull = exports.getLog = exports.stop = exports.startRun = exports.setNewUrl = exports.startSave = exports.fetchFile = exports.SET_API_URL = exports.SAVE_LOG = exports.IS_RUNNING = exports.IS_LOADING = exports.FINISH_SERVER = exports.IS_SAVING = exports.LOAD_FILE = undefined;
 
 var _reduxEffectsLocation = require('redux-effects-location');
 
@@ -12,12 +12,15 @@ var _reduxEffectsFetch = require('redux-effects-fetch');
 
 var _reduxEffects = require('redux-effects');
 
+var _initialize = require('./initialize');
+
 var LOAD_FILE = 'LOAD_FILE';
 var IS_SAVING = 'IS_SAVING';
 var FINISH_SERVER = 'FINISH_SERVER';
 var IS_LOADING = 'IS_LOADING';
 var IS_RUNNING = 'IS_RUNNING';
 var SAVE_LOG = 'SAVE_LOG';
+var SET_API_URL = 'SET_API_URL';
 
 function startRun(file) {
 	return [(0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/file.run', {
@@ -131,12 +134,37 @@ function saveLog(data) {
 	};
 }
 
+function connectEV3(url) {
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/connect', {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			url: url
+		})
+	}), setApiUrl, function (err) {
+		return console.warn(err);
+	});
+}
+
+function setApiUrl(msg) {
+	return [{
+		type: SET_API_URL,
+		payload: {
+			url: msg.url
+		}
+	}, (0, _initialize.getFileList)()];
+}
+
 exports.LOAD_FILE = LOAD_FILE;
 exports.IS_SAVING = IS_SAVING;
 exports.FINISH_SERVER = FINISH_SERVER;
 exports.IS_LOADING = IS_LOADING;
 exports.IS_RUNNING = IS_RUNNING;
 exports.SAVE_LOG = SAVE_LOG;
+exports.SET_API_URL = SET_API_URL;
 exports.fetchFile = fetchFile;
 exports.startSave = startSave;
 exports.setNewUrl = setNewUrl;
@@ -145,8 +173,9 @@ exports.stop = stop;
 exports.getLog = getLog;
 exports.startPull = startPull;
 exports.clearLog = clearLog;
+exports.connectEV3 = connectEV3;
 
-},{"redux-effects":403,"redux-effects-fetch":401,"redux-effects-location":402}],2:[function(require,module,exports){
+},{"./initialize":2,"redux-effects":403,"redux-effects-fetch":401,"redux-effects-location":402}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -164,7 +193,7 @@ var URL_DID_CHANGE = 'URL_DID_CHANGE';
 var SET_FILE_LIST = 'SET_FILE_LIST';
 
 function initializeApp() {
-  return [(0, _reduxEffectsLocation.bindUrl)(urlDidChange), getFileList()];
+  return [(0, _reduxEffectsLocation.bindUrl)(urlDidChange)];
 }
 
 function getFileList() {
@@ -182,7 +211,7 @@ function getFileList() {
 function setList(files) {
   return {
     type: SET_FILE_LIST,
-    payload: JSON.parse(files)
+    payload: files
   };
 }
 
@@ -1547,7 +1576,8 @@ var Home = function (_Component) {
 
     _this.state = {
       showDialog: false,
-      errorText: ''
+      errorText: '',
+      showApiDialog: false
     };
     return _this;
   }
@@ -1567,7 +1597,21 @@ var Home = function (_Component) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      this.props.dispatch((0, _initialize.getFileList)());
+      if (this.props.apiUrl) {
+        this.props.dispatch((0, _initialize.getFileList)());
+      }
+    }
+  }, {
+    key: 'connectApi',
+    value: function connectApi() {
+      var _this3 = this;
+
+      this.setState({
+        showApiDialog: true
+      });
+      setTimeout(function () {
+        return _this3.refs.apiUrl.focus();
+      });
     }
   }, {
     key: 'pullButtonClick',
@@ -1575,43 +1619,48 @@ var Home = function (_Component) {
       this.props.dispatch((0, _actions.startPull)());
     }
   }, {
-    key: '_onDialogCancel',
-    value: function _onDialogCancel() {
+    key: 'resetDialogs',
+    value: function resetDialogs() {
       this.setState({
         showDialog: false,
+        showApiDialog: false,
         errorText: ''
       });
     }
   }, {
     key: '_onDialogSubmit',
     value: function _onDialogSubmit() {
-      this.props.dispatch((0, _actions.setNewUrl)('/edit/' + this.refs.name.getValue()));
-      this.setState({
-        errorText: ''
-      });
+      if (this.state.showDialog) {
+        this.props.dispatch((0, _actions.setNewUrl)('/edit/' + this.refs.name.getValue()));
+      } else if (this.state.showApiDialog) {
+        this.props.dispatch((0, _actions.connectEV3)(this.refs.apiUrl.getValue()));
+      }
+      this.resetDialogs();
     }
   }, {
     key: '_handleTextChange',
     value: function _handleTextChange(e) {
       var errorText = e.target.value.match(/\s/g) ? 'No spaces allowed' : '';
       this.setState({
-        errorText: errorText
+        errorText: ''
       });
     }
   }, {
     key: 'render',
     value: function render() {
+      console.log(this.props);
       var files = this.props.files && this.props.files.length > 0 ? this.props.files.map(function (project, i) {
         return _react2.default.createElement(_project2.default, { name: project, key: 'project-' + i });
       }) : _react2.default.createElement(
         _lib.ListItem,
         null,
-        'No files found'
+        'Use the connect button to pair with your EV3'
       );
-      var standardActions = [_react2.default.createElement(_lib.FlatButton, { key: 0, secondary: true, label: 'Cancel', onTouchTap: this._onDialogCancel.bind(this) }), _react2.default.createElement(_lib.FlatButton, { key: 1, primary: true, label: 'Submit', onTouchTap: this._onDialogSubmit.bind(this), ref: 'submit', disabled: this.state.errorText.length > 0 })];
+      var standardActions = [_react2.default.createElement(_lib.FlatButton, { key: 0, secondary: true, label: 'Cancel', onTouchTap: this.resetDialogs.bind(this) }), _react2.default.createElement(_lib.FlatButton, { key: 1, primary: true, label: 'Submit', onTouchTap: this._onDialogSubmit.bind(this), ref: 'submit', disabled: this.state.errorText.length > 0 })];
+      var mainButton = this.props.files && this.props.files.length > 0 ? _react2.default.createElement(_lib.FlatButton, { onClick: this.createFile.bind(this), label: 'Create' }) : _react2.default.createElement(_lib.FlatButton, { onClick: this.connectApi.bind(this), label: 'Connect' });
       return _react2.default.createElement(
         _main2.default,
-        { nav: _react2.default.createElement(_nav2.default, { title: 'EV3.js', iconRight: _react2.default.createElement(_lib.FlatButton, { onClick: this.createFile.bind(this), label: 'Create' }) }) },
+        { nav: _react2.default.createElement(_nav2.default, { title: 'EV3.js', iconRight: mainButton }) },
         _react2.default.createElement(_lib.FlatButton, { onClick: this.pullButtonClick.bind(this), label: 'Pull Updates' }),
         _react2.default.createElement(
           'div',
@@ -1638,6 +1687,23 @@ var Home = function (_Component) {
             onChange: this._handleTextChange.bind(this),
             errorText: this.state.errorText,
             ref: 'name' })
+        ),
+        _react2.default.createElement(
+          _lib.Dialog,
+          {
+            open: this.state.showApiDialog,
+            ref: 'apiDialog',
+            actions: standardActions,
+            bodyStyle: styles.content },
+          _react2.default.createElement(
+            'label',
+            { style: styles.label },
+            'IP Address:'
+          ),
+          _react2.default.createElement(_lib.TextField, {
+            onChange: this._handleTextChange.bind(this),
+            errorText: this.state.errorText,
+            ref: 'apiUrl' })
         )
       );
     }
@@ -60986,7 +61052,7 @@ function wrapActionCreators(actionCreators) {
 }
 
 module.exports = wrapActionCreators;
-},{"redux":409}],261:[function(require,module,exports){
+},{"redux":413}],261:[function(require,module,exports){
 arguments[4][54][0].apply(exports,arguments)
 },{"dup":54}],262:[function(require,module,exports){
 /**
@@ -80096,6 +80162,286 @@ exports.default = multi;
 'use strict';
 
 exports.__esModule = true;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+exports['default'] = applyMiddleware;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _compose = require('./compose');
+
+var _compose2 = _interopRequireDefault(_compose);
+
+/**
+ * Creates a store enhancer that applies middleware to the dispatch method
+ * of the Redux store. This is handy for a variety of tasks, such as expressing
+ * asynchronous actions in a concise manner, or logging every action payload.
+ *
+ * See `redux-thunk` package as an example of the Redux middleware.
+ *
+ * Because middleware is potentially asynchronous, this should be the first
+ * store enhancer in the composition chain.
+ *
+ * Note that each middleware will be given the `dispatch` and `getState` functions
+ * as named arguments.
+ *
+ * @param {...Function} middlewares The middleware chain to be applied.
+ * @returns {Function} A store enhancer applying the middleware.
+ */
+
+function applyMiddleware() {
+  for (var _len = arguments.length, middlewares = Array(_len), _key = 0; _key < _len; _key++) {
+    middlewares[_key] = arguments[_key];
+  }
+
+  return function (next) {
+    return function (reducer, initialState) {
+      var store = next(reducer, initialState);
+      var _dispatch = store.dispatch;
+      var chain = [];
+
+      var middlewareAPI = {
+        getState: store.getState,
+        dispatch: function dispatch(action) {
+          return _dispatch(action);
+        }
+      };
+      chain = middlewares.map(function (middleware) {
+        return middleware(middlewareAPI);
+      });
+      _dispatch = _compose2['default'].apply(undefined, chain)(store.dispatch);
+
+      return _extends({}, store, {
+        dispatch: _dispatch
+      });
+    };
+  };
+}
+
+module.exports = exports['default'];
+},{"./compose":411}],409:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+exports['default'] = bindActionCreators;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _utilsMapValues = require('./utils/mapValues');
+
+var _utilsMapValues2 = _interopRequireDefault(_utilsMapValues);
+
+function bindActionCreator(actionCreator, dispatch) {
+  return function () {
+    return dispatch(actionCreator.apply(undefined, arguments));
+  };
+}
+
+/**
+ * Turns an object whose values are action creators, into an object with the
+ * same keys, but with every function wrapped into a `dispatch` call so they
+ * may be invoked directly. This is just a convenience method, as you can call
+ * `store.dispatch(MyActionCreators.doSomething())` yourself just fine.
+ *
+ * For convenience, you can also pass a single function as the first argument,
+ * and get a function in return.
+ *
+ * @param {Function|Object} actionCreators An object whose values are action
+ * creator functions. One handy way to obtain it is to use ES6 `import * as`
+ * syntax. You may also pass a single function.
+ *
+ * @param {Function} dispatch The `dispatch` function available on your Redux
+ * store.
+ *
+ * @returns {Function|Object} The object mimicking the original object, but with
+ * every action creator wrapped into the `dispatch` call. If you passed a
+ * function as `actionCreators`, the return value will also be a single
+ * function.
+ */
+
+function bindActionCreators(actionCreators, dispatch) {
+  if (typeof actionCreators === 'function') {
+    return bindActionCreator(actionCreators, dispatch);
+  }
+
+  if (typeof actionCreators !== 'object' || actionCreators === null || actionCreators === undefined) {
+    throw new Error('bindActionCreators expected an object or a function, instead received ' + (actionCreators === null ? 'null' : typeof actionCreators) + '. ' + 'Did you write "import ActionCreators from" instead of "import * as ActionCreators from"?');
+  }
+
+  return _utilsMapValues2['default'](actionCreators, function (actionCreator) {
+    return bindActionCreator(actionCreator, dispatch);
+  });
+}
+
+module.exports = exports['default'];
+},{"./utils/mapValues":415}],410:[function(require,module,exports){
+(function (process){
+'use strict';
+
+exports.__esModule = true;
+exports['default'] = combineReducers;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _createStore = require('./createStore');
+
+var _utilsIsPlainObject = require('./utils/isPlainObject');
+
+var _utilsIsPlainObject2 = _interopRequireDefault(_utilsIsPlainObject);
+
+var _utilsMapValues = require('./utils/mapValues');
+
+var _utilsMapValues2 = _interopRequireDefault(_utilsMapValues);
+
+var _utilsPick = require('./utils/pick');
+
+var _utilsPick2 = _interopRequireDefault(_utilsPick);
+
+/* eslint-disable no-console */
+
+function getUndefinedStateErrorMessage(key, action) {
+  var actionType = action && action.type;
+  var actionName = actionType && '"' + actionType.toString() + '"' || 'an action';
+
+  return 'Reducer "' + key + '" returned undefined handling ' + actionName + '. ' + 'To ignore an action, you must explicitly return the previous state.';
+}
+
+function getUnexpectedStateShapeWarningMessage(inputState, reducers, action) {
+  var reducerKeys = Object.keys(reducers);
+  var argumentName = action && action.type === _createStore.ActionTypes.INIT ? 'initialState argument passed to createStore' : 'previous state received by the reducer';
+
+  if (reducerKeys.length === 0) {
+    return 'Store does not have a valid reducer. Make sure the argument passed ' + 'to combineReducers is an object whose values are reducers.';
+  }
+
+  if (!_utilsIsPlainObject2['default'](inputState)) {
+    return 'The ' + argumentName + ' has unexpected type of "' + ({}).toString.call(inputState).match(/\s([a-z|A-Z]+)/)[1] + '". Expected argument to be an object with the following ' + ('keys: "' + reducerKeys.join('", "') + '"');
+  }
+
+  var unexpectedKeys = Object.keys(inputState).filter(function (key) {
+    return !reducers.hasOwnProperty(key);
+  });
+
+  if (unexpectedKeys.length > 0) {
+    return 'Unexpected ' + (unexpectedKeys.length > 1 ? 'keys' : 'key') + ' ' + ('"' + unexpectedKeys.join('", "') + '" found in ' + argumentName + '. ') + 'Expected to find one of the known reducer keys instead: ' + ('"' + reducerKeys.join('", "') + '". Unexpected keys will be ignored.');
+  }
+}
+
+function assertReducerSanity(reducers) {
+  Object.keys(reducers).forEach(function (key) {
+    var reducer = reducers[key];
+    var initialState = reducer(undefined, { type: _createStore.ActionTypes.INIT });
+
+    if (typeof initialState === 'undefined') {
+      throw new Error('Reducer "' + key + '" returned undefined during initialization. ' + 'If the state passed to the reducer is undefined, you must ' + 'explicitly return the initial state. The initial state may ' + 'not be undefined.');
+    }
+
+    var type = '@@redux/PROBE_UNKNOWN_ACTION_' + Math.random().toString(36).substring(7).split('').join('.');
+    if (typeof reducer(undefined, { type: type }) === 'undefined') {
+      throw new Error('Reducer "' + key + '" returned undefined when probed with a random type. ' + ('Don\'t try to handle ' + _createStore.ActionTypes.INIT + ' or other actions in "redux/*" ') + 'namespace. They are considered private. Instead, you must return the ' + 'current state for any unknown actions, unless it is undefined, ' + 'in which case you must return the initial state, regardless of the ' + 'action type. The initial state may not be undefined.');
+    }
+  });
+}
+
+/**
+ * Turns an object whose values are different reducer functions, into a single
+ * reducer function. It will call every child reducer, and gather their results
+ * into a single state object, whose keys correspond to the keys of the passed
+ * reducer functions.
+ *
+ * @param {Object} reducers An object whose values correspond to different
+ * reducer functions that need to be combined into one. One handy way to obtain
+ * it is to use ES6 `import * as reducers` syntax. The reducers may never return
+ * undefined for any action. Instead, they should return their initial state
+ * if the state passed to them was undefined, and the current state for any
+ * unrecognized action.
+ *
+ * @returns {Function} A reducer function that invokes every reducer inside the
+ * passed object, and builds a state object with the same shape.
+ */
+
+function combineReducers(reducers) {
+  var finalReducers = _utilsPick2['default'](reducers, function (val) {
+    return typeof val === 'function';
+  });
+  var sanityError;
+
+  try {
+    assertReducerSanity(finalReducers);
+  } catch (e) {
+    sanityError = e;
+  }
+
+  return function combination(state, action) {
+    if (state === undefined) state = {};
+
+    if (sanityError) {
+      throw sanityError;
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      var warningMessage = getUnexpectedStateShapeWarningMessage(state, finalReducers, action);
+      if (warningMessage) {
+        console.error(warningMessage);
+      }
+    }
+
+    var hasChanged = false;
+    var finalState = _utilsMapValues2['default'](finalReducers, function (reducer, key) {
+      var previousStateForKey = state[key];
+      var nextStateForKey = reducer(previousStateForKey, action);
+      if (typeof nextStateForKey === 'undefined') {
+        var errorMessage = getUndefinedStateErrorMessage(key, action);
+        throw new Error(errorMessage);
+      }
+      hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
+      return nextStateForKey;
+    });
+
+    return hasChanged ? finalState : state;
+  };
+}
+
+module.exports = exports['default'];
+}).call(this,require('_process'))
+},{"./createStore":412,"./utils/isPlainObject":414,"./utils/mapValues":415,"./utils/pick":416,"_process":243}],411:[function(require,module,exports){
+/**
+ * Composes single-argument functions from right to left.
+ *
+ * @param {...Function} funcs The functions to compose.
+ * @returns {Function} A function obtained by composing functions from right to
+ * left. For example, compose(f, g, h) is identical to arg => f(g(h(arg))).
+ */
+"use strict";
+
+exports.__esModule = true;
+exports["default"] = compose;
+
+function compose() {
+  for (var _len = arguments.length, funcs = Array(_len), _key = 0; _key < _len; _key++) {
+    funcs[_key] = arguments[_key];
+  }
+
+  return function () {
+    if (funcs.length === 0) {
+      return arguments[0];
+    }
+
+    var last = funcs[funcs.length - 1];
+    var rest = funcs.slice(0, -1);
+
+    return rest.reduceRight(function (composed, f) {
+      return f(composed);
+    }, last.apply(undefined, arguments));
+  };
+}
+
+module.exports = exports["default"];
+},{}],412:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
 exports['default'] = createStore;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -80256,7 +80602,8 @@ function createStore(reducer, initialState) {
     replaceReducer: replaceReducer
   };
 }
-},{"./utils/isPlainObject":414}],409:[function(require,module,exports){
+},{"./utils/isPlainObject":414}],413:[function(require,module,exports){
+(function (process){
 'use strict';
 
 exports.__esModule = true;
@@ -80267,305 +80614,41 @@ var _createStore = require('./createStore');
 
 var _createStore2 = _interopRequireDefault(_createStore);
 
-var _utilsCombineReducers = require('./utils/combineReducers');
+var _combineReducers = require('./combineReducers');
 
-var _utilsCombineReducers2 = _interopRequireDefault(_utilsCombineReducers);
+var _combineReducers2 = _interopRequireDefault(_combineReducers);
 
-var _utilsBindActionCreators = require('./utils/bindActionCreators');
+var _bindActionCreators = require('./bindActionCreators');
 
-var _utilsBindActionCreators2 = _interopRequireDefault(_utilsBindActionCreators);
+var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
 
-var _utilsApplyMiddleware = require('./utils/applyMiddleware');
+var _applyMiddleware = require('./applyMiddleware');
 
-var _utilsApplyMiddleware2 = _interopRequireDefault(_utilsApplyMiddleware);
-
-var _utilsCompose = require('./utils/compose');
-
-var _utilsCompose2 = _interopRequireDefault(_utilsCompose);
-
-exports.createStore = _createStore2['default'];
-exports.combineReducers = _utilsCombineReducers2['default'];
-exports.bindActionCreators = _utilsBindActionCreators2['default'];
-exports.applyMiddleware = _utilsApplyMiddleware2['default'];
-exports.compose = _utilsCompose2['default'];
-},{"./createStore":408,"./utils/applyMiddleware":410,"./utils/bindActionCreators":411,"./utils/combineReducers":412,"./utils/compose":413}],410:[function(require,module,exports){
-'use strict';
-
-exports.__esModule = true;
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-exports['default'] = applyMiddleware;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
 
 var _compose = require('./compose');
 
 var _compose2 = _interopRequireDefault(_compose);
 
-/**
- * Creates a store enhancer that applies middleware to the dispatch method
- * of the Redux store. This is handy for a variety of tasks, such as expressing
- * asynchronous actions in a concise manner, or logging every action payload.
- *
- * See `redux-thunk` package as an example of the Redux middleware.
- *
- * Because middleware is potentially asynchronous, this should be the first
- * store enhancer in the composition chain.
- *
- * Note that each middleware will be given the `dispatch` and `getState` functions
- * as named arguments.
- *
- * @param {...Function} middlewares The middleware chain to be applied.
- * @returns {Function} A store enhancer applying the middleware.
- */
+/*
+* This is a dummy function to check if the function name has been altered by minification.
+* If the function has been minified and NODE_ENV !== 'production', warn the user.
+*/
+function isCrushed() {}
 
-function applyMiddleware() {
-  for (var _len = arguments.length, middlewares = Array(_len), _key = 0; _key < _len; _key++) {
-    middlewares[_key] = arguments[_key];
-  }
-
-  return function (next) {
-    return function (reducer, initialState) {
-      var store = next(reducer, initialState);
-      var _dispatch = store.dispatch;
-      var chain = [];
-
-      var middlewareAPI = {
-        getState: store.getState,
-        dispatch: function dispatch(action) {
-          return _dispatch(action);
-        }
-      };
-      chain = middlewares.map(function (middleware) {
-        return middleware(middlewareAPI);
-      });
-      _dispatch = _compose2['default'].apply(undefined, chain)(store.dispatch);
-
-      return _extends({}, store, {
-        dispatch: _dispatch
-      });
-    };
-  };
+if (isCrushed.name !== 'isCrushed' && process.env.NODE_ENV !== 'production') {
+  /*eslint-disable no-console */
+  console.error('You are currently using minified code outside of NODE_ENV === \'production\'. ' + 'This means that you are running a slower development build of Redux. ' + 'You can use loose-envify (https://github.com/zertosh/loose-envify) for browserify ' + 'or DefinePlugin for webpack (http://stackoverflow.com/questions/30030031) ' + 'to ensure you have the correct code for your production build.');
+  /*eslint-enable */
 }
 
-module.exports = exports['default'];
-},{"./compose":413}],411:[function(require,module,exports){
-'use strict';
-
-exports.__esModule = true;
-exports['default'] = bindActionCreators;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _mapValues = require('./mapValues');
-
-var _mapValues2 = _interopRequireDefault(_mapValues);
-
-function bindActionCreator(actionCreator, dispatch) {
-  return function () {
-    return dispatch(actionCreator.apply(undefined, arguments));
-  };
-}
-
-/**
- * Turns an object whose values are action creators, into an object with the
- * same keys, but with every function wrapped into a `dispatch` call so they
- * may be invoked directly. This is just a convenience method, as you can call
- * `store.dispatch(MyActionCreators.doSomething())` yourself just fine.
- *
- * For convenience, you can also pass a single function as the first argument,
- * and get a function in return.
- *
- * @param {Function|Object} actionCreators An object whose values are action
- * creator functions. One handy way to obtain it is to use ES6 `import * as`
- * syntax. You may also pass a single function.
- *
- * @param {Function} dispatch The `dispatch` function available on your Redux
- * store.
- *
- * @returns {Function|Object} The object mimicking the original object, but with
- * every action creator wrapped into the `dispatch` call. If you passed a
- * function as `actionCreators`, the return value will also be a single
- * function.
- */
-
-function bindActionCreators(actionCreators, dispatch) {
-  if (typeof actionCreators === 'function') {
-    return bindActionCreator(actionCreators, dispatch);
-  }
-
-  if (typeof actionCreators !== 'object' || actionCreators === null || actionCreators === undefined) {
-    throw new Error('bindActionCreators expected an object or a function, instead received ' + (actionCreators === null ? 'null' : typeof actionCreators) + '. ' + 'Did you write "import ActionCreators from" instead of "import * as ActionCreators from"?');
-  }
-
-  return _mapValues2['default'](actionCreators, function (actionCreator) {
-    return bindActionCreator(actionCreator, dispatch);
-  });
-}
-
-module.exports = exports['default'];
-},{"./mapValues":415}],412:[function(require,module,exports){
-(function (process){
-'use strict';
-
-exports.__esModule = true;
-exports['default'] = combineReducers;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _createStore = require('../createStore');
-
-var _isPlainObject = require('./isPlainObject');
-
-var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
-
-var _mapValues = require('./mapValues');
-
-var _mapValues2 = _interopRequireDefault(_mapValues);
-
-var _pick = require('./pick');
-
-var _pick2 = _interopRequireDefault(_pick);
-
-/* eslint-disable no-console */
-
-function getUndefinedStateErrorMessage(key, action) {
-  var actionType = action && action.type;
-  var actionName = actionType && '"' + actionType.toString() + '"' || 'an action';
-
-  return 'Reducer "' + key + '" returned undefined handling ' + actionName + '. ' + 'To ignore an action, you must explicitly return the previous state.';
-}
-
-function getUnexpectedStateKeyWarningMessage(inputState, outputState, action) {
-  var reducerKeys = Object.keys(outputState);
-  var argumentName = action && action.type === _createStore.ActionTypes.INIT ? 'initialState argument passed to createStore' : 'previous state received by the reducer';
-
-  if (reducerKeys.length === 0) {
-    return 'Store does not have a valid reducer. Make sure the argument passed ' + 'to combineReducers is an object whose values are reducers.';
-  }
-
-  if (!_isPlainObject2['default'](inputState)) {
-    return 'The ' + argumentName + ' has unexpected type of "' + ({}).toString.call(inputState).match(/\s([a-z|A-Z]+)/)[1] + '". Expected argument to be an object with the following ' + ('keys: "' + reducerKeys.join('", "') + '"');
-  }
-
-  var unexpectedKeys = Object.keys(inputState).filter(function (key) {
-    return reducerKeys.indexOf(key) < 0;
-  });
-
-  if (unexpectedKeys.length > 0) {
-    return 'Unexpected ' + (unexpectedKeys.length > 1 ? 'keys' : 'key') + ' ' + ('"' + unexpectedKeys.join('", "') + '" found in ' + argumentName + '. ') + 'Expected to find one of the known reducer keys instead: ' + ('"' + reducerKeys.join('", "') + '". Unexpected keys will be ignored.');
-  }
-}
-
-function assertReducerSanity(reducers) {
-  Object.keys(reducers).forEach(function (key) {
-    var reducer = reducers[key];
-    var initialState = reducer(undefined, { type: _createStore.ActionTypes.INIT });
-
-    if (typeof initialState === 'undefined') {
-      throw new Error('Reducer "' + key + '" returned undefined during initialization. ' + 'If the state passed to the reducer is undefined, you must ' + 'explicitly return the initial state. The initial state may ' + 'not be undefined.');
-    }
-
-    var type = '@@redux/PROBE_UNKNOWN_ACTION_' + Math.random().toString(36).substring(7).split('').join('.');
-    if (typeof reducer(undefined, { type: type }) === 'undefined') {
-      throw new Error('Reducer "' + key + '" returned undefined when probed with a random type. ' + ('Don\'t try to handle ' + _createStore.ActionTypes.INIT + ' or other actions in "redux/*" ') + 'namespace. They are considered private. Instead, you must return the ' + 'current state for any unknown actions, unless it is undefined, ' + 'in which case you must return the initial state, regardless of the ' + 'action type. The initial state may not be undefined.');
-    }
-  });
-}
-
-/**
- * Turns an object whose values are different reducer functions, into a single
- * reducer function. It will call every child reducer, and gather their results
- * into a single state object, whose keys correspond to the keys of the passed
- * reducer functions.
- *
- * @param {Object} reducers An object whose values correspond to different
- * reducer functions that need to be combined into one. One handy way to obtain
- * it is to use ES6 `import * as reducers` syntax. The reducers may never return
- * undefined for any action. Instead, they should return their initial state
- * if the state passed to them was undefined, and the current state for any
- * unrecognized action.
- *
- * @returns {Function} A reducer function that invokes every reducer inside the
- * passed object, and builds a state object with the same shape.
- */
-
-function combineReducers(reducers) {
-  var finalReducers = _pick2['default'](reducers, function (val) {
-    return typeof val === 'function';
-  });
-  var sanityError;
-
-  try {
-    assertReducerSanity(finalReducers);
-  } catch (e) {
-    sanityError = e;
-  }
-
-  var defaultState = _mapValues2['default'](finalReducers, function () {
-    return undefined;
-  });
-
-  return function combination(state, action) {
-    if (state === undefined) state = defaultState;
-
-    if (sanityError) {
-      throw sanityError;
-    }
-
-    var hasChanged = false;
-    var finalState = _mapValues2['default'](finalReducers, function (reducer, key) {
-      var previousStateForKey = state[key];
-      var nextStateForKey = reducer(previousStateForKey, action);
-      if (typeof nextStateForKey === 'undefined') {
-        var errorMessage = getUndefinedStateErrorMessage(key, action);
-        throw new Error(errorMessage);
-      }
-      hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
-      return nextStateForKey;
-    });
-
-    if (process.env.NODE_ENV !== 'production') {
-      var warningMessage = getUnexpectedStateKeyWarningMessage(state, finalState, action);
-      if (warningMessage) {
-        console.error(warningMessage);
-      }
-    }
-
-    return hasChanged ? finalState : state;
-  };
-}
-
-module.exports = exports['default'];
+exports.createStore = _createStore2['default'];
+exports.combineReducers = _combineReducers2['default'];
+exports.bindActionCreators = _bindActionCreators2['default'];
+exports.applyMiddleware = _applyMiddleware2['default'];
+exports.compose = _compose2['default'];
 }).call(this,require('_process'))
-},{"../createStore":408,"./isPlainObject":414,"./mapValues":415,"./pick":416,"_process":243}],413:[function(require,module,exports){
-/**
- * Composes single-argument functions from right to left.
- *
- * @param {...Function} funcs The functions to compose.
- * @returns {Function} A function obtained by composing functions from right to
- * left. For example, compose(f, g, h) is identical to arg => f(g(h(arg))).
- */
-"use strict";
-
-exports.__esModule = true;
-exports["default"] = compose;
-
-function compose() {
-  for (var _len = arguments.length, funcs = Array(_len), _key = 0; _key < _len; _key++) {
-    funcs[_key] = arguments[_key];
-  }
-
-  return function (arg) {
-    return funcs.reduceRight(function (composed, f) {
-      return f(composed);
-    }, arg);
-  };
-}
-
-module.exports = exports["default"];
-},{}],414:[function(require,module,exports){
+},{"./applyMiddleware":408,"./bindActionCreators":409,"./combineReducers":410,"./compose":411,"./createStore":412,"_process":243}],414:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -81513,7 +81596,7 @@ exports.default = (0, _redux.combineReducers)({
   sensorReducer: _sensorReducer2.default
 });
 
-},{"./sensorReducer":422,"./serverReducer":423,"redux":409}],422:[function(require,module,exports){
+},{"./sensorReducer":422,"./serverReducer":423,"redux":413}],422:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -81622,6 +81705,10 @@ function reducer() {
 			return _extends({}, state, {
 				log: action.payload
 			});
+		case _actions.SET_API_URL:
+			return _extends({}, state, {
+				apiUrl: action.payload.url
+			});
 	}
 	return state;
 }
@@ -81678,7 +81765,8 @@ var style = {
 function home(params, props) {
   return _react2.default.createElement(_home2.default, _extends({
     style: style.font,
-    files: props.state.files
+    files: props.state.files,
+    apiUrl: props.state.apiUrl
   }, props));
 }
 
@@ -81757,7 +81845,7 @@ exports.default = function (initialState) {
   return _redux.applyMiddleware.apply(undefined, middlewares)(_redux.createStore)(_reducers2.default, initialState);
 };
 
-},{"./middleware/getFile":24,"./middleware/sensorData":25,"./reducers":421,"redux":409,"redux-effects":403,"redux-effects-events":400,"redux-effects-fetch":401,"redux-effects-location":402,"redux-logger":405,"redux-multi":407}],426:[function(require,module,exports){
+},{"./middleware/getFile":24,"./middleware/sensorData":25,"./reducers":421,"redux":413,"redux-effects":403,"redux-effects-events":400,"redux-effects-fetch":401,"redux-effects-location":402,"redux-logger":405,"redux-multi":407}],426:[function(require,module,exports){
 /**
  * Modules
  */

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "watchify index.js -o ./public/bundle.js -t [babelify] & devtool server.js --watch",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,19 +22,12 @@
     "@f/equal-obj": "^1.2.1",
     "body-parser": "^1.14.1",
     "brace": "^0.5.1",
-    "color-sensor": "^0.1.20",
     "cors": "^2.7.1",
     "enroute": "^1.0.1",
-    "ev3-js-devices": "^0.5.3",
-    "ev3-js-motor": "^0.5.20",
-    "ev3-js-wait": "^0.1.4",
     "express": "^4.13.3",
     "fs": "0.0.2",
-    "ir-sensor": "^0.1.20",
     "lodash": "^3.10.1",
     "material-ui": "^0.13.4",
-    "move-steering": "^0.1.39",
-    "parsetrace": "^0.2.0",
     "react": "^0.14.3",
     "react-ace": "^2.6.0",
     "react-dom": "^0.14.3",
@@ -47,8 +41,7 @@
     "redux-effects-location": "^0.1.11",
     "redux-logger": "^1.0.9",
     "redux-multi": "^0.1.8",
-    "touch-sensor": "^0.1.16",
-    "ultrasonic-sensor": "^0.1.11"
+    "request": "^2.67.0"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.1.18",

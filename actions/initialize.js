@@ -7,8 +7,7 @@ const SET_FILE_LIST = 'SET_FILE_LIST'
 
 function initializeApp () {
   return [
-    bindUrl(urlDidChange),
-    getFileList()
+    bindUrl(urlDidChange)
   ]
 }
 
@@ -25,7 +24,7 @@ function getFileList () {
 function setList (files) {
 	return {
 		type: SET_FILE_LIST,
-		payload: JSON.parse(files)
+		payload: files
 	}
 }
 

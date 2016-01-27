@@ -1,4 +1,4 @@
-import {LOAD_FILE, IS_SAVING, FINISH_SERVER, IS_LOADING, IS_RUNNING, SAVE_LOG} from '../actions/actions'
+import {LOAD_FILE, IS_SAVING, FINISH_SERVER, IS_LOADING, IS_RUNNING, SAVE_LOG, SET_API_URL} from '../actions/actions'
 import {URL_DID_CHANGE, SET_FILE_LIST} from '../actions/initialize'
 
 
@@ -48,6 +48,11 @@ function reducer (state={}, action) {
 			return {
 				...state,
 				log: action.payload
+			}
+		case SET_API_URL:
+			return {
+				...state,
+				apiUrl: action.payload.url
 			}
 	}
 	return state
