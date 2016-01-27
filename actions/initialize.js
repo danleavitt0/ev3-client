@@ -11,8 +11,8 @@ function initializeApp () {
   ]
 }
 
-function getFileList () {
-	return bind(fetch('/file.getAll', {
+function getFileList (apiUrl) {
+	return bind(fetch(apiUrl + '/file.getAll', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -24,7 +24,7 @@ function getFileList () {
 function setList (files) {
 	return {
 		type: SET_FILE_LIST,
-		payload: files
+		payload: JSON.parse(files)
 	}
 }
 

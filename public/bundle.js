@@ -22,8 +22,8 @@ var IS_RUNNING = 'IS_RUNNING';
 var SAVE_LOG = 'SAVE_LOG';
 var SET_API_URL = 'SET_API_URL';
 
-function startRun(file) {
-	return [(0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/file.run', {
+function startRun(apiUrl, file) {
+	return [(0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(apiUrl + '/file.run', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -37,8 +37,8 @@ function startRun(file) {
 	}), startRunning()];
 }
 
-function fetchSave(title, text) {
-	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/file.save', {
+function fetchSave(apiUrl, title, text) {
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(apiUrl + '/file.save', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -53,16 +53,16 @@ function fetchSave(title, text) {
 	});
 }
 
-function fetchFile(url) {
-	return [(0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(url, {
+function fetchFile(apiUrl, url) {
+	return [(0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(apiUrl + url, {
 		method: 'POST'
 	}), loadFile, function (err) {
 		return console.warn(err);
 	}), isLoading()];
 }
 
-function stop() {
-	return (0, _reduxEffectsFetch.fetch)('/file.stop', {
+function stop(apiUrl) {
+	return (0, _reduxEffectsFetch.fetch)(apiUrl + '/file.stop', {
 		method: 'POST'
 	});
 }
@@ -103,8 +103,8 @@ function loadFile(file) {
 	};
 }
 
-function startPull() {
-	return (0, _reduxEffectsFetch.fetch)('/source.update', {
+function startPull(apiUrl) {
+	return (0, _reduxEffectsFetch.fetch)(apiUrl + '/source.update', {
 		method: 'POST'
 	});
 }
@@ -113,16 +113,16 @@ function setNewUrl(url) {
 	return (0, _reduxEffectsLocation.setUrl)(url);
 }
 
-function getLog() {
-	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/log.get', {
+function getLog(apiUrl) {
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(apiUrl + '/log.get', {
 		method: 'POST'
 	}), saveLog, function (err) {
 		return console.warn(err);
 	});
 }
 
-function clearLog() {
-	return (0, _reduxEffectsFetch.fetch)('/log.clear', {
+function clearLog(apiUrl) {
+	return (0, _reduxEffectsFetch.fetch)(apiUrl + '/log.clear', {
 		method: 'POST'
 	});
 }
@@ -155,7 +155,7 @@ function setApiUrl(msg) {
 		payload: {
 			url: msg.url
 		}
-	}, (0, _initialize.getFileList)()];
+	}, (0, _initialize.getFileList)(msg.url)];
 }
 
 exports.LOAD_FILE = LOAD_FILE;
@@ -196,8 +196,8 @@ function initializeApp() {
   return [(0, _reduxEffectsLocation.bindUrl)(urlDidChange)];
 }
 
-function getFileList() {
-  return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/file.getAll', {
+function getFileList(apiUrl) {
+  return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(apiUrl + '/file.getAll', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -211,7 +211,7 @@ function getFileList() {
 function setList(files) {
   return {
     type: SET_FILE_LIST,
-    payload: files
+    payload: JSON.parse(files)
   };
 }
 
@@ -243,16 +243,16 @@ var DEVICE_DATA = 'DEVICE_DATA';
 var INIT_SENSORS = 'INIT_SENSORS';
 var SET_MODE = 'SET_MODE';
 
-function findSensors() {
-	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/sensors.find', {
+function findSensors(apiUrl) {
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(apiUrl + '/sensors.find', {
 		method: 'POST'
 	}), initSensors, function (err) {
 		return console.warn(err);
 	});
 }
 
-function getSensorData(path, port, ext) {
-	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/sensor.data', {
+function getSensorData(apiUrl, path, port, ext) {
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(apiUrl + '/sensor.data', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -275,8 +275,8 @@ function deviceData(data) {
 	};
 }
 
-function setSensorMode(path, mode, port) {
-	return [(0, _reduxEffectsFetch.fetch)('/sensor.mode', {
+function setSensorMode(apiUrl, path, mode, port) {
+	return [(0, _reduxEffectsFetch.fetch)(apiUrl + '/sensor.mode', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -488,7 +488,7 @@ var Log = function (_Component) {
 			var _this2 = this;
 
 			this.interval = setInterval(function () {
-				return _this2.props.dispatch((0, _actions.getLog)());
+				return _this2.props.dispatch((0, _actions.getLog)(_this2.props.apiUrl));
 			}, 1000);
 		}
 	}, {
@@ -807,6 +807,7 @@ function motor(params, props) {
 	var dispatch = props.dispatch;
 	var value = props.value;
 	var mode = props.mode;
+	var apiUrl = props.apiUrl;
 
 	return _react2.default.createElement(_motor2.default, {
 		path: path,
@@ -814,7 +815,8 @@ function motor(params, props) {
 		dispatch: dispatch,
 		mode: mode,
 		value: value,
-		interval: INTERVAL });
+		interval: INTERVAL,
+		apiUrl: apiUrl });
 }
 
 function color(params, props) {
@@ -824,6 +826,7 @@ function color(params, props) {
 	var dispatch = props.dispatch;
 	var value = props.value;
 	var mode = props.mode;
+	var apiUrl = props.apiUrl;
 
 	return _react2.default.createElement(_colorSensor2.default, {
 		path: path,
@@ -831,7 +834,8 @@ function color(params, props) {
 		dispatch: dispatch,
 		mode: mode,
 		value: value,
-		interval: INTERVAL
+		interval: INTERVAL,
+		apiUrl: apiUrl
 	});
 }
 
@@ -842,6 +846,7 @@ function touch(params, props) {
 	var dispatch = props.dispatch;
 	var value = props.value;
 	var mode = props.mode;
+	var apiUrl = props.apiUrl;
 
 	return _react2.default.createElement(_touchSensor2.default, {
 		path: path,
@@ -849,7 +854,8 @@ function touch(params, props) {
 		dispatch: dispatch,
 		mode: mode,
 		value: value,
-		interval: INTERVAL
+		interval: INTERVAL,
+		apiUrl: apiUrl
 	});
 }
 
@@ -860,6 +866,7 @@ function ultrasonic(params, props) {
 	var dispatch = props.dispatch;
 	var value = props.value;
 	var mode = props.mode;
+	var apiUrl = props.apiUrl;
 
 	return _react2.default.createElement(_ultrasonicSensor2.default, {
 		path: path,
@@ -867,7 +874,8 @@ function ultrasonic(params, props) {
 		dispatch: dispatch,
 		mode: mode,
 		value: value,
-		interval: INTERVAL
+		interval: INTERVAL,
+		apiUrl: apiUrl
 	});
 }
 
@@ -1023,7 +1031,9 @@ var SensorReadOut = function (_Component) {
 			var _this2 = this;
 
 			var sensors = this.props.sensors.sensors;
-			var dispatch = this.props.dispatch;
+			var _props = this.props;
+			var dispatch = _props.dispatch;
+			var apiUrl = _props.apiUrl;
 
 			var widgets = [];
 
@@ -1041,6 +1051,7 @@ var SensorReadOut = function (_Component) {
 					key: key,
 					port: key,
 					dispatch: dispatch,
+					apiUrl: apiUrl,
 					path: sensors[key].path,
 					type: sensors[key].type,
 					value: sensors[key].value,
@@ -1069,12 +1080,12 @@ var SensorReadOut = function (_Component) {
 									style: styles.toolbarItem,
 									primary: true,
 									onClick: function onClick() {
-										return _this2.props.dispatch((0, _actions.clearLog)());
+										return _this2.props.dispatch((0, _actions.clearLog)(apiUrl));
 									},
 									label: 'clear log' })
 							)
 						),
-						_react2.default.createElement(_Log2.default, { log: this.props.log, dispatch: dispatch })
+						_react2.default.createElement(_Log2.default, { log: this.props.log, dispatch: dispatch, apiUrl: apiUrl })
 					),
 					_react2.default.createElement(
 						_tabs.Tab,
@@ -1127,7 +1138,7 @@ var SensorReadOut = function (_Component) {
 				toggled: true
 			});
 			this.interval = setInterval(function () {
-				return _this3.props.dispatch((0, _sensors.findSensors)());
+				return _this3.props.dispatch((0, _sensors.findSensors)(_this3.props.apiUrl));
 			}, 2000);
 		}
 	}, {
@@ -1407,7 +1418,7 @@ var Editor = function (_Component) {
 	}, {
 		key: 'save',
 		value: function save(e) {
-			this.props.dispatch((0, _actions.startSave)(this.props.title, this.state.text));
+			this.props.dispatch((0, _actions.startSave)(this.props.apiUrl, this.props.title, this.state.text));
 			return this.setState({
 				dirty: false
 			});
@@ -1425,13 +1436,13 @@ var Editor = function (_Component) {
 					_this2.run();
 				});
 			} else {
-				this.props.dispatch((0, _actions.startRun)(this.props.title));
+				this.props.dispatch((0, _actions.startRun)(this.props.apiUrl, this.props.title));
 			}
 		}
 	}, {
 		key: 'stop',
 		value: function stop() {
-			return this.props.dispatch((0, _actions.stop)());
+			return this.props.dispatch((0, _actions.stop)(this.props.apiUrl));
 		}
 	}, {
 		key: 'onChange',
@@ -1490,6 +1501,7 @@ var Editor = function (_Component) {
 						log: this.props.log,
 						sensors: this.props.sensors,
 						dispatch: this.props.dispatch,
+						apiUrl: this.props.apiUrl,
 						running: this.state.running })
 				}),
 				_react2.default.createElement(_lib.Snackbar, {
@@ -2289,7 +2301,7 @@ exports.default = function (_ref) {
           fileName += '.js';
           action.payload += '.js';
         }
-        dispatch((0, _actions.fetchFile)('/file.get/' + fileName));
+        dispatch((0, _actions.fetchFile)(getState().serverReducer.apiUrl, '/file.get/' + fileName));
       }
       return next(action);
     };
@@ -81782,7 +81794,8 @@ function editor(params, props) {
     file: props.file,
     message: props.state.saveMessage,
     sensors: props.sensors,
-    log: props.state.log
+    log: props.state.log,
+    apiUrl: props.state.apiUrl
   }, props));
 }
 

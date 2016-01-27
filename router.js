@@ -40,6 +40,7 @@ function editor (params, props) {
     message={props.state.saveMessage}
     sensors={props.sensors}
     log={props.state.log}
+    apiUrl={props.state.apiUrl}
     {...props} />
 }
 

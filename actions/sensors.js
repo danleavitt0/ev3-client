@@ -5,14 +5,14 @@ const DEVICE_DATA = 'DEVICE_DATA'
 const INIT_SENSORS = 'INIT_SENSORS'
 const SET_MODE = 'SET_MODE'
 
-function findSensors () {
-  return bind(fetch('/sensors.find', {
+function findSensors (apiUrl) {
+  return bind(fetch(apiUrl + '/sensors.find', {
     method: 'POST'
   }), initSensors, (err) => console.warn(err))
 }
 
-function getSensorData (path, port, ext) {
-	return bind(fetch('/sensor.data', {
+function getSensorData (apiUrl, path, port, ext) {
+	return bind(fetch(apiUrl + '/sensor.data', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -33,9 +33,9 @@ function deviceData (data) {
 	}
 }
 
-function setSensorMode (path, mode, port) {
+function setSensorMode (apiUrl, path, mode, port) {
 	return [
-		fetch('/sensor.mode', {
+		fetch(apiUrl + '/sensor.mode', {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',

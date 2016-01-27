@@ -11,9 +11,9 @@ const IS_RUNNING = 'IS_RUNNING'
 const SAVE_LOG = 'SAVE_LOG'
 const SET_API_URL = 'SET_API_URL'
 
-function startRun (file) {
+function startRun (apiUrl, file) {
 	return [
-		bind(fetch('/file.run', {
+		bind(fetch(apiUrl + '/file.run', {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',
@@ -28,8 +28,8 @@ function startRun (file) {
 }
 
 
-function fetchSave (title, text) {
-	return bind(fetch('/file.save', {
+function fetchSave (apiUrl, title, text) {
+	return bind(fetch(apiUrl + '/file.save', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -42,17 +42,17 @@ function fetchSave (title, text) {
 	}), finishServer, (err) => console.warn(err))
 }
 
-function fetchFile (url) {
+function fetchFile (apiUrl, url) {
 	return [
-		bind(fetch(url, {
+		bind(fetch(apiUrl + url, {
      		method: 'POST'
     	}), loadFile, (err) => console.warn(err)),
 		isLoading()
 	]
 }
 
-function stop () {
-	return fetch('/file.stop', {
+function stop (apiUrl) {
+	return fetch(apiUrl + '/file.stop', {
 		method: 'POST',
 	})
 }
@@ -96,8 +96,8 @@ function loadFile (file) {
 	}
 }
 
-function startPull () {
-	return fetch('/source.update', {
+function startPull (apiUrl) {
+	return fetch(apiUrl + '/source.update', {
 		method: 'POST'
 	})
 }
@@ -106,14 +106,14 @@ function setNewUrl (url) {
 	return setUrl(url)
 }
 
-function getLog () {
-	return bind(fetch('/log.get', {
+function getLog (apiUrl) {
+	return bind(fetch(apiUrl + '/log.get', {
 			method: 'POST'
 		}), saveLog, err => console.warn(err))
 }
 
-function clearLog () {
-	return fetch('/log.clear', {
+function clearLog (apiUrl) {
+	return fetch(apiUrl + '/log.clear', {
 		method: 'POST'
 	})
 }
@@ -146,7 +146,7 @@ function setApiUrl (msg) {
 				url: msg.url
 			}
 		},
-		getFileList()
+		getFileList(msg.url)
 	]
 }
 
