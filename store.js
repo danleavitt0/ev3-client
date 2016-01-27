@@ -6,8 +6,9 @@ import events from 'redux-effects-events'
 import location from 'redux-effects-location'
 import logger from 'redux-logger'
 import fetch from 'redux-effects-fetch'
-import sensorData from './middleware/sensorData'
+import localStorage from 'redux-effects-localstorage'
 import getFile from './middleware/getFile'
+import persist from './middleware/persist'
 
 const middlewares = [
 	multi,
@@ -15,7 +16,9 @@ const middlewares = [
   fetch,
   events(),
   location(),
-  getFile
+	localStorage(window.localStorage),
+  getFile,
+	persist
 ]
 
 export default initialState => applyMiddleware(...middlewares)(createStore)(reducer, initialState)

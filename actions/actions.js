@@ -2,6 +2,7 @@ import {bindUrl, setUrl} from 'redux-effects-location'
 import {fetch} from 'redux-effects-fetch'
 import {bind} from 'redux-effects'
 import {getFileList} from './initialize'
+import {setItem, getItem} from 'redux-effects-localstorage'
 
 const LOAD_FILE = 'LOAD_FILE'
 const IS_SAVING = 'IS_SAVING'
@@ -10,6 +11,8 @@ const IS_LOADING = 'IS_LOADING'
 const IS_RUNNING = 'IS_RUNNING'
 const SAVE_LOG = 'SAVE_LOG'
 const SET_API_URL = 'SET_API_URL'
+
+const localStorageKey = 'ev3-js'
 
 function startRun (apiUrl, file) {
 	return [
@@ -43,6 +46,7 @@ function fetchSave (apiUrl, title, text) {
 }
 
 function fetchFile (apiUrl, url) {
+	console.log(apiUrl, url)
 	return [
 		bind(fetch(apiUrl + url, {
      		method: 'POST'
@@ -63,9 +67,9 @@ function startRunning () {
 	}
 }
 
-function startSave (title, text) {
+function startSave (apiUrl, title, text) {
 	return [
-		fetchSave(title, text),
+		fetchSave(apiUrl, title, text),
 		isSaving()
 	]
 }
@@ -150,6 +154,10 @@ function setApiUrl (msg) {
 	]
 }
 
+function persistUrl (url) {
+	return setItem(localStorageKey, url)
+}
+
 
 export {
 	LOAD_FILE,
@@ -168,5 +176,6 @@ export {
 	getLog,
 	startPull,
 	clearLog,
-	connectEV3
+	connectEV3,
+	persistUrl
 }
