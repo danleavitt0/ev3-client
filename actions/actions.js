@@ -130,11 +130,14 @@ function saveLog (data) {
 }
 
 function connectEV3 (apiUrl) {
-	return bind(fetch('http://' + apiUrl + '/connect', {
+	return bind(fetch('http://' + apiUrl + '/ping', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
+		},
+		body: {
+			url: apiUrl
 		}
 	}), setApiUrl, (err) => console.warn(err))
 }

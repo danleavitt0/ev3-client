@@ -140,11 +140,14 @@ function saveLog(data) {
 }
 
 function connectEV3(apiUrl) {
-	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('http://' + apiUrl + '/connect', {
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('http://' + apiUrl + '/ping', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
+		},
+		body: {
+			url: apiUrl
 		}
 	}), setApiUrl, function (err) {
 		return console.warn(err);
