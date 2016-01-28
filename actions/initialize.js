@@ -47,7 +47,7 @@ function getFileList (apiUrl) {
 function setList (files) {
 	return {
 		type: SET_FILE_LIST,
-		payload: JSON.parse(files)
+		payload: JSON.parse(files.data)
 	}
 }
 
