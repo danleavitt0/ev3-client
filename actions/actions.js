@@ -129,16 +129,13 @@ function saveLog (data) {
 	}
 }
 
-function connectEV3 (url) {
-	return bind(fetch('/connect', {
+function connectEV3 (apiUrl) {
+	return bind(fetch(apiUrl + '/connect', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			url
-		})
+		}
 	}), setApiUrl, (err) => console.warn(err))
 }
 

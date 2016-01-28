@@ -139,16 +139,13 @@ function saveLog(data) {
 	};
 }
 
-function connectEV3(url) {
-	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('/connect', {
+function connectEV3(apiUrl) {
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(apiUrl + '/connect', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			url: url
-		})
+		}
 	}), setApiUrl, function (err) {
 		return console.warn(err);
 	});
