@@ -140,15 +140,14 @@ function saveLog(data) {
 }
 
 function connectEV3(apiUrl) {
-	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)('http://' + apiUrl + '/ping', {
+	var url = 'http://' + apiUrl;
+	return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(url + '/ping', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		},
-		body: {
-			url: apiUrl
-		}
+		body: JSON.stringify({ url: url })
 	}), setApiUrl, function (err) {
 		return console.warn(err);
 	});
@@ -1690,16 +1689,15 @@ var Home = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      console.log(this.props);
       var files = this.props.files && this.props.files.length > 0 ? this.props.files.map(function (project, i) {
         return _react2.default.createElement(_project2.default, { name: project, key: 'project-' + i });
       }) : _react2.default.createElement(
         _lib.ListItem,
         null,
-        'Use the connect button to pair with your EV3'
+        'No projects found'
       );
       var standardActions = [_react2.default.createElement(_lib.FlatButton, { key: 0, secondary: true, label: 'Cancel', onTouchTap: this.resetDialogs.bind(this) }), _react2.default.createElement(_lib.FlatButton, { key: 1, primary: true, label: 'Submit', onTouchTap: this._onDialogSubmit.bind(this), ref: 'submit', disabled: this.state.errorText.length > 0 })];
-      var mainButton = this.props.files && this.props.files.length > 0 ? _react2.default.createElement(_lib.FlatButton, { onClick: this.createFile.bind(this), label: 'Create' }) : _react2.default.createElement(_lib.FlatButton, { onClick: this.connectApi.bind(this), label: 'Connect' });
+      var mainButton = this.props.apiUrl ? _react2.default.createElement(_lib.FlatButton, { onClick: this.createFile.bind(this), label: 'Create' }) : _react2.default.createElement(_lib.FlatButton, { onClick: this.connectApi.bind(this), label: 'Connect' });
       return _react2.default.createElement(
         _main2.default,
         { nav: _react2.default.createElement(_nav2.default, { title: 'EV3.js', iconRight: mainButton }) },
