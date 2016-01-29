@@ -7,6 +7,7 @@ const URL_DID_CHANGE = 'URL_DID_CHANGE'
 const SET_FILE_LIST = 'SET_FILE_LIST'
 const localStorageKey = 'ev3-js'
 const SET_API_URL = 'SET_API_URL'
+const REMOVE_API_URL = 'REMOVE_API_URL'
 
 function initializeApp () {
   return [
@@ -36,12 +37,8 @@ function hydrateState (url) {
 
 function getFileList (apiUrl) {
 	return bind(fetch(apiUrl + '/file.getAll', {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-  }), setList, (err) => console.warn(err))
+    method: 'POST'
+  }), setList, removeApi)
 }
 
 function setList (files) {
@@ -49,6 +46,12 @@ function setList (files) {
 		type: SET_FILE_LIST,
 		payload: files.data
 	}
+}
+
+function removeApi () {
+  return {
+    type: REMOVE_API_URL
+  }
 }
 
 function urlDidChange (url) {
@@ -61,6 +64,8 @@ function urlDidChange (url) {
 export {
   URL_DID_CHANGE,
   SET_FILE_LIST,
+  REMOVE_API_URL,
+
   initializeApp,
   getFileList
 }

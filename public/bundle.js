@@ -190,7 +190,7 @@ exports.persistUrl = persistUrl;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getFileList = exports.initializeApp = exports.SET_FILE_LIST = exports.URL_DID_CHANGE = undefined;
+exports.getFileList = exports.initializeApp = exports.REMOVE_API_URL = exports.SET_FILE_LIST = exports.URL_DID_CHANGE = undefined;
 
 var _reduxEffectsLocation = require('redux-effects-location');
 
@@ -204,6 +204,7 @@ var URL_DID_CHANGE = 'URL_DID_CHANGE';
 var SET_FILE_LIST = 'SET_FILE_LIST';
 var localStorageKey = 'ev3-js';
 var SET_API_URL = 'SET_API_URL';
+var REMOVE_API_URL = 'REMOVE_API_URL';
 
 function initializeApp() {
   return [hydrateApiUrl(), (0, _reduxEffectsLocation.bindUrl)(urlDidChange)];
@@ -226,20 +227,20 @@ function hydrateState(url) {
 
 function getFileList(apiUrl) {
   return (0, _reduxEffects.bind)((0, _reduxEffectsFetch.fetch)(apiUrl + '/file.getAll', {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-  }), setList, function (err) {
-    return console.warn(err);
-  });
+    method: 'POST'
+  }), setList, removeApi);
 }
 
 function setList(files) {
   return {
     type: SET_FILE_LIST,
     payload: files.data
+  };
+}
+
+function removeApi() {
+  return {
+    type: REMOVE_API_URL
   };
 }
 
@@ -252,6 +253,7 @@ function urlDidChange(url) {
 
 exports.URL_DID_CHANGE = URL_DID_CHANGE;
 exports.SET_FILE_LIST = SET_FILE_LIST;
+exports.REMOVE_API_URL = REMOVE_API_URL;
 exports.initializeApp = initializeApp;
 exports.getFileList = getFileList;
 
@@ -82110,6 +82112,10 @@ var _actions = require('../actions/actions');
 
 var _initialize = require('../actions/initialize');
 
+var _reduxEffectsLocalstorage = require('redux-effects-localstorage');
+
+var localStorageKey = 'ev3-js';
+
 function reducer() {
 	var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	var action = arguments[1];
@@ -82156,13 +82162,18 @@ function reducer() {
 			return _extends({}, state, {
 				apiUrl: action.payload.url
 			});
+		case _actions.REMOVE_API_URL:
+			(0, _reduxEffectsLocalstorage.setItem)(localStorageKey, '');
+			return _extends({}, state, {
+				apiUrl: ''
+			});
 	}
 	return state;
 }
 
 exports.default = reducer;
 
-},{"../actions/actions":1,"../actions/initialize":2}],436:[function(require,module,exports){
+},{"../actions/actions":1,"../actions/initialize":2,"redux-effects-localstorage":413}],436:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };

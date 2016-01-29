@@ -1,6 +1,8 @@
-import {LOAD_FILE, IS_SAVING, FINISH_SERVER, IS_LOADING, IS_RUNNING, SAVE_LOG, SET_API_URL} from '../actions/actions'
+import {LOAD_FILE, IS_SAVING, FINISH_SERVER, IS_LOADING, IS_RUNNING, SAVE_LOG, SET_API_URL, REMOVE_API_URL} from '../actions/actions'
 import {URL_DID_CHANGE, SET_FILE_LIST} from '../actions/initialize'
+import {setItem} from 'redux-effects-localstorage'
 
+const localStorageKey = 'ev3-js'
 
 function reducer (state={}, action) {
 	switch (action.type) {
@@ -53,6 +55,12 @@ function reducer (state={}, action) {
 			return {
 				...state,
 				apiUrl: action.payload.url
+			}
+		case REMOVE_API_URL:
+			setItem(localStorageKey, '')
+			return {
+				...state,
+				apiUrl: ''
 			}
 	}
 	return state
