@@ -9,7 +9,7 @@ export default function ({dispatch, getState}) {
     		fileName += '.js'
     		action.payload += '.js'
     	}
-      dispatch(fetchFile(getState().serverReducer.apiUrl, '/file.get/' + fileName))
+      setTimeout(() => dispatch(fetchFile(getState().serverReducer.apiUrl, '/file.get/' + fileName)))
     }
     return next(action)
   }
